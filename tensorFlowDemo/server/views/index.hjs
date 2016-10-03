@@ -60,7 +60,10 @@
 
         <!-- MODULE : MachineLearning and angular bootstrapping -->
         <script src="scripts/modules/MachineLearning/module.js"></script>
-
+            <!-- SERVICES -->
+            <script src="scripts/modules/MachineLearning/services/ModelService.svc.js"></script>
+            <!-- DIRECTIVES -->
+            <script src="scripts/modules/MachineLearning/directives/ml-main.dir.js"></script>
 
         <!-- INITIALIZATION -->
         <script>

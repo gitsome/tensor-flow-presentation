@@ -12,6 +12,7 @@
     "bluebird": "^2.9.25",
     "body-parser": "^1.13.3",
     "colors": "*",
+    "hjs": "*",
     "express": "^4.13.3",
     "grunt-contrib-less": "*",
     "grunt-contrib-watch": "*",

@@ -24,7 +24,19 @@
 
     /*============ DEBUG LOGGING / ERROR HANDLING ============*/
 
-    require('colors').setTheme(CONF.colorTheme);
+    require('colors').setTheme({
+        "silly": 'rainbow',
+        "input": 'grey',
+        "verbose": 'cyan',
+        "prompt": 'grey',
+        "success": 'green',
+        "info": 'green',
+        "data": 'grey',
+        "help": 'cyan',
+        "warn": 'yellow',
+        "debug": 'blue',
+        "error": 'red'
+    });
 
 
     /*============ PRIVATE VARIABLES ============*/
@@ -98,7 +110,7 @@
         return new Promise(function(resolve, reject) {
 
             // order matters if you have dependencies amongst the services TODO (Implement a dependency injection system so this is done automatically)
-            appAPI.services['rest'] = require('./services/rest.svc.js')(appAPI);
+            appAPI.services['persist'] = require('./services/persist.svc.js')(appAPI);
 
             resolve();
         });
@@ -124,19 +136,16 @@
             // create the routeAPI (routes typically only interface with the services and templating)
             var routeAPI = {
                 services: appAPI.services,          // the services used within the routes (services have access to the appAPI)
-                server: CONF.server,                // pass along server configs for the client
-                socket: CONF.socket,                // also pass along socket port for the client
-                socketUtils: appAPI.socketUtils,    // some utility methods for sending socket info
-                responseCodes: responseCodes        // a list of server error codes
+                data: {}                            // the in memory data generated from the client
             };
 
             // configure all the routes for the application server
             configureApplicationServer(routeAPI);
 
             // start listenting
-            app.set('port', app.listen(CONF.server.port) || 3003);
+            app.set('port', 3003);
             server.listen(app.get('port'), function() {
-                console.log("express server listening on port: ".green + ("" + app.get('port').address().port).cyan);
+                console.log("express server listening on port: ".green + ("" + app.get('port')).cyan);
             });
 
             resolve(true);
