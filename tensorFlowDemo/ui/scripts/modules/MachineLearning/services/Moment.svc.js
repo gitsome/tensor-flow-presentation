@@ -1,35 +1,36 @@
+
+// we will wrap moment in this service
+var moment = moment || {};
+
 (function () {
 
-    angular.module('MachineLearning').service('ModelService', [
+    /**
+     * Wrapper for Moment.js
+     */
 
-        '$rootScope',
+    angular.module('MachineLearning').service('Moment', [
 
-        function ($rootScope) {
+        function () {
 
             /*============ SERVICE DECLARATION ============*/
 
-            var ModelService = {};
+            var MomentService;
 
 
             /*============ PRIVATE METHODS AND VARIABLES ============*/
 
-            var data = false;
-
 
             /*============ SERVICE DEFINITION ============*/
 
-            ModelService.initialize = function (data_in) {
-                data = data_in;
-            };
-
+            MomentService = moment;
 
             /*============ LISTENERS ============*/
 
             /*============ SERVICE PASSBACK ============*/
 
-            return ModelService;
-
+            return MomentService;
         }
     ]);
 
 })();
+

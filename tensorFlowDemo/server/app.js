@@ -110,7 +110,7 @@
         return new Promise(function(resolve, reject) {
 
             // order matters if you have dependencies amongst the services TODO (Implement a dependency injection system so this is done automatically)
-            appAPI.services['persist'] = require('./services/persist.svc.js')(appAPI);
+            appAPI.services['schemes'] = require('./services/schemes.svc.js')(appAPI);
 
             resolve();
         });
@@ -135,8 +135,7 @@
 
             // create the routeAPI (routes typically only interface with the services and templating)
             var routeAPI = {
-                services: appAPI.services,          // the services used within the routes (services have access to the appAPI)
-                data: {}                            // the in memory data generated from the client
+                services: appAPI.services           // the services used within the routes (services have access to the appAPI)
             };
 
             // configure all the routes for the application server
@@ -156,10 +155,7 @@
     /*============ INITIALIZE AND DATA REQUIRED =============*/
 
     var loadInitData = function () {
-
-        return new Promise(function(resolve, reject) {
-            resolve({});
-        });
+        return appAPI.services.schemes.hydrate();
     };
 
 

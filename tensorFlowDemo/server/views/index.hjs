@@ -15,8 +15,7 @@
         <script>
             // load the server side configs (just to make sure nodetypes get it)
             var sessionConfigs = {
-
-                data: {{& session.data }}, //the user object from the session
+                schemes: {{& session.schemes }}, //the user object from the session
             };
         </script>
 
@@ -24,10 +23,11 @@
         <link rel='stylesheet' href='lib/font-awesome-4.3.0/css/font-awesome.css' />
         <link rel='stylesheet' href='lib/bootstrap-3.2.0/dist/css/bootstrap.css' />
 
-        <!-- APPLICATION STYLES -->
-        <link rel='stylesheet' href='/styles/css/styles.css' />
+        <!-- FONTS -->
+        <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Lora|Open+Sans|Source+Code+Pro" rel="stylesheet">
 
-        <!-- PLUGIN STYLES -->
+        <!-- APPLICATION STYLES -->
+        <link rel='stylesheet' href='/styles/styles.css' />
 
 
         <!-- GLOBAL LIBRARIES AND FRAMEWORK : These libraries can all be used by node types -->
@@ -39,6 +39,9 @@
 
         <!-- Underscore -->
         <script src="lib/underscore/underscore-1.7.0.min.js"></script>
+
+        <!-- Underscore -->
+        <script src="lib/moment/moment.min.js"></script>
 
         <!-- Angular.js -->
         <script src="lib/angular-1.4.1/angular.js"></script>
@@ -52,18 +55,26 @@
         <!-- bootstrap plugins -->
         <script src="lib/bootstrap-3.2.0/dist/js/bootstrap.min.js"></script>
 
-
-        <!-- PRIVATE LIBRARIES AND FRAMEWORK : SHOULD NOT BE USED BY PLUGINS / NODETYPES -->
-
         <!-- angular-ui-router -->
         <script src="lib/angular-ui-router/angular-ui-router.js"></script>
 
+
+        <!-- APP MODULES -->
+
         <!-- MODULE : MachineLearning and angular bootstrapping -->
         <script src="scripts/modules/MachineLearning/module.js"></script>
+            <!-- CLASSES -->
+            <script src="scripts/modules/MachineLearning/classes/CursorClass.cls.js"></script>
             <!-- SERVICES -->
-            <script src="scripts/modules/MachineLearning/services/ModelService.svc.js"></script>
+            <script src="scripts/modules/MachineLearning/services/SchemeService.svc.js"></script>
+            <script src="scripts/modules/MachineLearning/services/Moment.svc.js"></script>
             <!-- DIRECTIVES -->
             <script src="scripts/modules/MachineLearning/directives/ml-main.dir.js"></script>
+            <script src="scripts/modules/MachineLearning/directives/ml-schemes.dir.js"></script>
+            <script src="scripts/modules/MachineLearning/directives/ml-edit-scheme.dir.js"></script>
+            <script src="scripts/modules/MachineLearning/directives/ml-scheme-item.dir.js"></script>
+            <script src="scripts/modules/MachineLearning/directives/ml-scheme-transform.dir.js"></script>
+
 
         <!-- INITIALIZATION -->
         <script>

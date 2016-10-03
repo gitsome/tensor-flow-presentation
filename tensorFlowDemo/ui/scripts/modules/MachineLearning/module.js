@@ -39,8 +39,8 @@ var sessionConfigs = sessionConfigs || {};
     /*======================== INITIALIZATION ========================*/
 
     // initialize the data
-    angular.module('MachineLearning').run(function(ModelService) {
-        ModelService.initialize({data:sessionConfigs.data});
+    angular.module('MachineLearning').run(function(SchemeService) {
+        SchemeService.initialize(sessionConfigs.schemes);
     });
 
 })();

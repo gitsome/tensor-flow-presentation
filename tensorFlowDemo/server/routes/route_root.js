@@ -13,10 +13,12 @@ module.exports = function(app, routeAPI){
     app.use(function(req, res) {
         //generate html that contains the initializations scripts
         //populated with enough environment info as needed for resource loading and web sockets
+        console.log("schemes:", services.schemes.get());
+
         res.render('index', {
             title: 'Machine Learning',
             session: {
-                data : JSON.stringify(routeAPI.data)
+                schemes : JSON.stringify(services.schemes.get())
             }
         });
     });
