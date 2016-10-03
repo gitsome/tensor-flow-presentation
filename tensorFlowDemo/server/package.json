@@ -1,0 +1,24 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.9.25",
+    "body-parser": "^1.13.3",
+    "colors": "*",
+    "express": "^4.13.3",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-watch": "*",
+    "node.extend": "*",
+    "request": "*",
+    "underscore": "^1.8.1",
+    "method-override": "^2.3.5",
+    "errorhandler": "^1.4.2"
+  }
+}
