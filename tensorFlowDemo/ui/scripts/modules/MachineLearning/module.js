@@ -7,7 +7,8 @@ var sessionConfigs = sessionConfigs || {};
 
     angular.module('MachineLearning', [
         'ngResource', 'ngCookies', 'ngSanitize', 'ngAnimate',   // angular modules
-        'ui.router'                                             // angular-ui modules
+        'ui.router',                                            // angular-ui modules
+        'ngStorage'                                             // local storage
     ]);
 
 

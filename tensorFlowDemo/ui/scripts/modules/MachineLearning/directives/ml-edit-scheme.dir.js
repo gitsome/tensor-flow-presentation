@@ -14,8 +14,9 @@
 
                 '$scope',
                 '$element',
+                'StringTransformService',
 
-                function ($scope, $element) {
+                function ($scope, $element, StringTransformService) {
 
                     /*============ MODEL ============*/
 
@@ -23,6 +24,10 @@
 
 
                     /*============ MODEL DEPENDENT METHODS ============*/
+
+                    var updateTransformedExamples = function () {
+                        $scope.transformedExamples = StringTransformService.generateStringTransformPairs($scope.scheme.transforms, 25);
+                    };
 
                     var debounced_updateTransformedExamples = _.debounce(function () {
                         updateTransformedExamples();
@@ -50,9 +55,9 @@
                     $scope.$on('ml-scheme-transform.scriptChanged', debounced_updateTransformedExamples);
 
 
-
-
                     /*============ INITIALIZATION ============*/
+
+                    debounced_updateTransformedExamples();
                 }
             ],
 
@@ -101,7 +106,7 @@
                                                 '</div>',
 
                                                 '<div>',
-                                                    '<ml-scheme-transform class="anim-el-slide-left" ng-repeat="transform in scheme.transforms track by transform.id" transform="transformObj"></ml-scheme-transform>',
+                                                    '<ml-scheme-transform class="anim-el-slide-left" ng-repeat="transform in scheme.transforms track by transform.id" transform="transform"></ml-scheme-transform>',
                                                 '</div>',
 
                                                 '<div class="text-right control-box">',
@@ -165,14 +170,11 @@
 
                                             '<div class="col-xs-12 text-center">',
 
-                                                '<div class="example-string"><span class="example-string-before">PQLDUHTNG</span> <i class="fa fa-arrow-right"></i> <span class="example-string-after">PQLDUHTNG</span></div>',
-                                                '<div class="example-string"><span class="example-string-before">PQLDUHTNG</span> <i class="fa fa-arrow-right"></i> <span class="example-string-after">PQLDUHTNG</span></div>',
-                                                '<div class="example-string"><span class="example-string-before">PQLDUHTNG</span> <i class="fa fa-arrow-right"></i> <span class="example-string-after">PQLDUHTNG</span></div>',
-                                                '<div class="example-string"><span class="example-string-before">PQLDUHTNG</span> <i class="fa fa-arrow-right"></i> <span class="example-string-after">PQLDUHTNG</span></div>',
-                                                '<div class="example-string"><span class="example-string-before">PQLDUHTNG</span> <i class="fa fa-arrow-right"></i> <span class="example-string-after">PQLDUHTNG</span></div>',
-                                                '<div class="example-string"><span class="example-string-before">PQLDUHTNG</span> <i class="fa fa-arrow-right"></i> <span class="example-string-after">PQLDUHTNG</span></div>',
-                                                '<div class="example-string"><span class="example-string-before">PQLDUHTNG</span> <i class="fa fa-arrow-right"></i> <span class="example-string-after">PQLDUHTNG</span></div>',
-                                                '<div class="example-string"><span class="example-string-before">PQLDUHTNG</span> <i class="fa fa-arrow-right"></i> <span class="example-string-after">PQLDUHTNG</span></div>',
+                                                '<div class="example-string" ng-repeat="transformedPair in transformedExamples">',
+                                                    '<span class="example-string-before">{{transformedPair.before}}</span> ',
+                                                    '<i class="fa fa-arrow-right"></i> ',
+                                                    '<span class="example-string-after">{{transformedPair.after}}</span>',
+                                                '</div>',
 
                                             '</div>',
 

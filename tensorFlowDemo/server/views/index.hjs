@@ -15,7 +15,7 @@
         <script>
             // load the server side configs (just to make sure nodetypes get it)
             var sessionConfigs = {
-                schemes: {{& session.schemes }}, //the user object from the session
+                schemes: {{& session.schemes }} //the user object from the session
             };
         </script>
 
@@ -43,6 +43,9 @@
         <!-- Underscore -->
         <script src="lib/moment/moment.min.js"></script>
 
+        <!-- Seeded Random -->
+        <script src="lib/seeded-random/seeded-random.js"></script>
+
         <!-- Angular.js -->
         <script src="lib/angular-1.4.1/angular.js"></script>
         <script src="lib/angular-1.4.1/angular-cookies.min.js"></script>
@@ -58,6 +61,9 @@
         <!-- angular-ui-router -->
         <script src="lib/angular-ui-router/angular-ui-router.js"></script>
 
+        <!-- angular-storage -->
+        <script src="lib/angular-storage/angular-storage.js"></script>
+
 
         <!-- APP MODULES -->
 
@@ -68,6 +74,8 @@
             <!-- SERVICES -->
             <script src="scripts/modules/MachineLearning/services/SchemeService.svc.js"></script>
             <script src="scripts/modules/MachineLearning/services/Moment.svc.js"></script>
+            <script src="scripts/modules/MachineLearning/services/StringTransformService.svc.js"></script>
+            <script src="scripts/modules/MachineLearning/services/SeededRandom.svc.js"></script>
             <!-- DIRECTIVES -->
             <script src="scripts/modules/MachineLearning/directives/ml-main.dir.js"></script>
             <script src="scripts/modules/MachineLearning/directives/ml-schemes.dir.js"></script>

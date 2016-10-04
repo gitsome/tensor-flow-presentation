@@ -91,7 +91,7 @@
 
                         '<div class="alert alert-info" ng-if="!schemes || !schemes.length"><i class="fa fa-info-circle"></i><strong>No Schemes Yet!</strong> Try refreshing or create a new scheme.</div>',
 
-                        '<ml-scheme-item class="anim-el-slide-right" ng-repeat="scheme in schemes" ng-if="schemes && schemes.length" scheme="scheme" is-disabled="creating"></ml-scheme-item>',
+                        '<ml-scheme-item class="anim-el-slide-right" ng-repeat="scheme in schemes track by scheme.name" scheme="scheme" is-disabled="creating"></ml-scheme-item>',
 
                     '</div>',
                 '</div>'
