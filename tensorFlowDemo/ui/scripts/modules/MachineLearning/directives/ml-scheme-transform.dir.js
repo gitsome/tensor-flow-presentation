@@ -51,6 +51,10 @@
 
                     /*============ INITIALIZATION ============*/
 
+                    new Behave({
+                        textarea: $element.find('textarea')[0],
+                        replaceTab: true
+                    });
                 }
             ],
 

@@ -79,6 +79,7 @@
                     return text.indexOf(findChar) !== -1;
                 };
                 that.indexOfChar = function (findChar) {
+                    findChar = findChar.toUpperCase();
                     return text.indexOf(findChar);
                 };
 
@@ -86,6 +87,8 @@
                 /*=============== FIND AND LOOP =============*/
 
                 that.eachChar = function (findChar, callBack) {
+
+                    findChar = findChar.toUpperCase();
 
                     var foundCursors = [];
                     for (var i=0; i < text.length; i++) {

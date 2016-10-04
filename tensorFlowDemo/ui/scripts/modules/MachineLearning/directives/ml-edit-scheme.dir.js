@@ -21,17 +21,20 @@
 
                     /*============ MODEL ============*/
 
-                    $scope.transformedExamples = [];
+                    $scope.transformedExamplesData = {
+                        transformPairs: [],
+                        percentChanged: 0
+                    };
 
 
                     /*============ MODEL DEPENDENT METHODS ============*/
 
-                    var updateTransformedExamples = function () {
-                        $scope.transformedExamples = StringTransformService.generateStringTransformPairs($scope.scheme.transforms, 25);
+                    var updateTransformedExamplesData = function () {
+                        $scope.transformedExamplesData = StringTransformService.generateStringTransformPairsData($scope.scheme.transforms, 30);
                     };
 
-                    var debounced_updateTransformedExamples = _.debounce(function () {
-                        updateTransformedExamples();
+                    var debounced_updateTransformedExamplesData = _.debounce(function () {
+                        updateTransformedExamplesData();
                         $scope.$apply();
                     }, 100);
 
@@ -52,18 +55,26 @@
 
                     $scope.refreshTransformations = function () {
                         SeededRandom.setNewSeed();
-                        updateTransformedExamples();
+                        updateTransformedExamplesData();
+                    };
+
+                    $scope.progressBarClass = function () {
+                        return {
+                            'progress-bar-danger': $scope.transformedExamplesData.percentChanged < 75,
+                            'progress-bar-warning': $scope.transformedExamplesData.percentChanged < 95,
+                            'progress-bar-success': $scope.transformedExamplesData.percentChanged >= 95
+                        };
                     };
 
 
                     /*============ LISTENERS ============*/
 
-                    $scope.$on('ml-scheme-transform.scriptChanged', debounced_updateTransformedExamples);
+                    $scope.$on('ml-scheme-transform.scriptChanged', debounced_updateTransformedExamplesData);
 
 
                     /*============ INITIALIZATION ============*/
 
-                    debounced_updateTransformedExamples();
+                    debounced_updateTransformedExamplesData();
                 }
             ],
 
@@ -172,7 +183,7 @@
                                         '<div class="col-xs-10">',
                                             '<label for="scheme-transforms">Transformations</label>',
                                         '</div>',
-                                        '<div class="col-xs-2 text-right">',
+                                        '<div class="col-xs-2 text-right noselect">',
                                             '<i class="fa fa-refresh ml-edit-scheme-refresh" ng-click="refreshTransformations()"></i>',
                                         '</div>',
                                     '</div>',
@@ -181,9 +192,21 @@
 
                                         '<div class="row">',
 
+                                            '<div class="col-xs-12">',
+                                                '<div class="progress ml-edit-scheme-percent-change">',
+                                                    '<div class="progress-bar" ng-class="progressBarClass()" role="progressbar" style="width: {{transformedExamplesData.percentChanged}}%;">',
+                                                        '<span class="sr-only">60% Complete</span>',
+                                                    '</div>',
+                                                '</div>',
+                                            '</div>',
+
+                                        '</div>',
+
+                                        '<div class="row">',
+
                                             '<div class="col-xs-12 text-center">',
 
-                                                '<div class="example-string" ng-repeat="transformedPair in transformedExamples">',
+                                                '<div class="example-string" ng-repeat="transformedPair in transformedExamplesData.transformPairs" ng-class="{\'example-string-has-change\': transformedPair.hasChange}">',
                                                     '<span class="example-string-before">{{transformedPair.before}}</span> ',
                                                     '<i class="fa fa-arrow-right"></i> ',
                                                     '<span class="example-string-after">{{transformedPair.after}}</span>',

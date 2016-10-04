@@ -21,7 +21,7 @@
 
         <!-- THIRD PARTY STYLES -->
         <link rel='stylesheet' href='lib/font-awesome-4.3.0/css/font-awesome.css' />
-        <link rel='stylesheet' href='lib/bootstrap-3.2.0/dist/css/bootstrap.css' />
+        <link rel='stylesheet' href='lib/bootstrap/css/bootstrap.min.css' />
 
         <!-- FONTS -->
         <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Lora|Open+Sans|Source+Code+Pro" rel="stylesheet">
@@ -35,6 +35,7 @@
         <!-- jQuery -->
         <script src="lib/jquery/jquery.min.js"></script>
         <script src="lib/jquery/jquery.plugins.js"></script>
+        <script src="lib/behave/behave.js"></script>
         <script src="lib/jquery/truncate/jquery.truncate.js"></script>
 
         <!-- Underscore -->
@@ -54,9 +55,6 @@
         <script src="lib/angular-1.4.1/angular-sanitize.min.js"></script>
         <script src="lib/angular-1.4.1/angular-touch.min.js"></script>
         <script src="lib/angular-1.4.1/angular-animate.min.js"></script>
-
-        <!-- bootstrap plugins -->
-        <script src="lib/bootstrap-3.2.0/dist/js/bootstrap.min.js"></script>
 
         <!-- angular-ui-router -->
         <script src="lib/angular-ui-router/angular-ui-router.js"></script>

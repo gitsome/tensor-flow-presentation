@@ -57,23 +57,35 @@
 
             /*============ SERVICE DEFINITION ============*/
 
-            StringTransformService.generateStringTransformPairs = function (transforms, count) {
+            StringTransformService.generateStringTransformPairsData = function (transforms, count) {
 
                 SeededRandom.reset();
 
                 var transformPairs = [];
 
+                var totalChanged = 0;
+
                 for (var i=0; i < count; i++) {
 
                     var beforeString = getRandomString(STRING_LENGTH);
+                    var afterString = transformString(beforeString, transforms);
+                    var hasChanged = beforeString !== afterString && afterString !== 'ERROR';
+
+                    if (hasChanged) {
+                        totalChanged++;
+                    }
 
                     transformPairs.push({
                         before: beforeString,
-                        after: transformString(beforeString, transforms)
+                        after: afterString,
+                        hasChange: hasChanged
                     });
                 }
 
-                return transformPairs;
+                return {
+                    transformPairs: transformPairs,
+                    percentChanged: totalChanged ? Math.round((totalChanged / transformPairs.length) * 100) : 0
+                };
             };
 
             /*============ LISTENERS ============*/
