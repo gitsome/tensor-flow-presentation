@@ -282,12 +282,11 @@ ml-scheme-transform textarea {
 
 .ml-edit-scheme-percent-change.progress {
     background: #fff;
-    box-shadow: 0px 0px 4px rgba(0,0,0, 0.3);
+    box-shadow: 0px 0px 3px rgba(0,0,0, 0.4);
 }
 .progress-bar {
-    -webkit-transition-property: width;
-    -webkit-transition-duration: 500ms;
-    -webkit-transition-timing-function: cubic-bezier(0.595, 0.61, 0, 1);
+    -webkit-transition: width .2s cubic-bezier(0.595, 0.61, 0, 1);
+    transition: width .2s cubic-bezier(0.595, 0.61, 0, 1);
 }
 
 .ml-edit-scheme-refresh:hover {

@@ -30,7 +30,7 @@
                     /*============ MODEL DEPENDENT METHODS ============*/
 
                     var updateTransformedExamplesData = function () {
-                        $scope.transformedExamplesData = StringTransformService.generateStringTransformPairsData($scope.scheme.transforms, 30);
+                        $scope.transformedExamplesData = StringTransformService.generateStringTransformPairsData($scope.scheme.transforms, 50);
                     };
 
                     var debounced_updateTransformedExamplesData = _.debounce(function () {
@@ -195,7 +195,7 @@
                                             '<div class="col-xs-12">',
                                                 '<div class="progress ml-edit-scheme-percent-change">',
                                                     '<div class="progress-bar" ng-class="progressBarClass()" role="progressbar" style="width: {{transformedExamplesData.percentChanged}}%;">',
-                                                        '<span class="sr-only">60% Complete</span>',
+                                                        '<span>{{transformedExamplesData.percentChanged}}%</span>',
                                                     '</div>',
                                                 '</div>',
                                             '</div>',

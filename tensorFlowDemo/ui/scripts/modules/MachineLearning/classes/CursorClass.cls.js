@@ -62,10 +62,6 @@
 
                 /*=============== GET AND SET =============*/
 
-                that.set = function (newCharacter) {
-                    text = replaceAt(cursor, newCharacter.toUpperCase());
-                    return that;
-                };
                 that.get = function () {
                     return text.charAt(cursor);
                 };
@@ -81,6 +77,11 @@
                 that.indexOfChar = function (findChar) {
                     findChar = findChar.toUpperCase();
                     return text.indexOf(findChar);
+                };
+
+                that.set = function (newCharacter) {
+                    text = replaceAt(cursor, newCharacter.toUpperCase());
+                    return that;
                 };
 
 
