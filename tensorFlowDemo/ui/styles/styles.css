@@ -262,6 +262,23 @@ ml-scheme-transform textarea {
     width: 100%;
 }
 
+.ml-edit-scheme-refresh {
+    font-size: 125%;
+    cursor: pointer;
+    -webkit-transition: -webkit-transform .2s ease-in-out;
+          transition:         transform .2s ease-in-out;
+}
+
+.ml-edit-scheme-refresh:hover {
+    color: #428bca;
+    -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+.ml-edit-scheme-refresh:active {
+    -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
 .ml-scheme-transform-error i {
     color: #BD7435;
 }

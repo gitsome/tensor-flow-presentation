@@ -21,8 +21,6 @@
                 var text = "";
                 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-                SeededRandom.reset();
-
                 for( var i=0; i < stringLength; i++) {
                     text += possible.charAt(Math.floor(SeededRandom.random() * possible.length));
                 }
@@ -60,6 +58,8 @@
             /*============ SERVICE DEFINITION ============*/
 
             StringTransformService.generateStringTransformPairs = function (transforms, count) {
+
+                SeededRandom.reset();
 
                 var transformPairs = [];
 

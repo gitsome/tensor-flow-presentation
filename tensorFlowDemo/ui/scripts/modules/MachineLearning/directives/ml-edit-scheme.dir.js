@@ -15,8 +15,9 @@
                 '$scope',
                 '$element',
                 'StringTransformService',
+                'SeededRandom',
 
-                function ($scope, $element, StringTransformService) {
+                function ($scope, $element, StringTransformService, SeededRandom) {
 
                     /*============ MODEL ============*/
 
@@ -47,6 +48,11 @@
                             id: Math.round(Math.random()*99999999999),
                             script: ''
                         });
+                    };
+
+                    $scope.refreshTransformations = function () {
+                        SeededRandom.setNewSeed();
+                        updateTransformedExamples();
                     };
 
 
@@ -162,7 +168,14 @@
 
                                 '<div class="form-section">',
 
-                                    '<label for="scheme-transforms">Example Transformations</label>',
+                                    '<div class="row">',
+                                        '<div class="col-xs-10">',
+                                            '<label for="scheme-transforms">Transformations</label>',
+                                        '</div>',
+                                        '<div class="col-xs-2 text-right">',
+                                            '<i class="fa fa-refresh ml-edit-scheme-refresh" ng-click="refreshTransformations()"></i>',
+                                        '</div>',
+                                    '</div>',
 
                                     '<div class="well">',
 
