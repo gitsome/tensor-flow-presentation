@@ -5,7 +5,8 @@ module.exports = function (appAPI) {
 
     /*============ PRIVATE VARIABLES/METHODS ============*/
 
-    var currentMode = 'view'; // other option 'edit'
+    // 'view' OR 'edit'
+    var currentMode = 'view';
 
 
     /*============ SERVICE ============*/

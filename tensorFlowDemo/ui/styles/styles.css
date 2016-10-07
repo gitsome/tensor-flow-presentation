@@ -352,11 +352,19 @@ ml-scheme-transform textarea {
     background: rgba(0,0,0, 0.1);
 
     -webkit-transition-property: all;
-    -webkit-transition-duration: 1500ms;
+    -webkit-transition-duration: 1000ms;
     -webkit-transition-timing-function: cubic-bezier(0.595, 0.61, 0, 1);
     -webkit-transform: translate(0%, 0px);
     opacity: 1;
 }
+.ml-schemes-test-question-transition.transition-success {
+    background: rgba(92,184,92, 0.3);
+}
+.ml-schemes-test-question-transition.transition-danger {
+    background: rgba(217,83,79, 0.3);
+}
+
+
 .ml-schemes-test-question-transition.ng-enter {
   -webkit-transform: translate(-100%, 0px);
   opacity: 0;

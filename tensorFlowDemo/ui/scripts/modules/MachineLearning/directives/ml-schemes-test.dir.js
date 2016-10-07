@@ -23,11 +23,11 @@
 
                     var schemes = SchemeService.get();
 
-                    var MAX_QUESTIONS = schemes.length * 50; // I think this should be some type of exponential... would get progressively harder with more
+                    var MAX_QUESTIONS = schemes.length * 70; // I think this should be some type of exponential... would get progressively harder with more
 
-                    var INTERVAL_PERCENT_CORRECT = 85; // this also needs to scale with the number of schemes
+                    var INTERVAL_PERCENT_CORRECT = 80; // this also needs to scale with the number of schemes
 
-                    var INTERVAL_CORRECT = schemes.length * 8; // this would be a good number to research based off the machine learning results
+                    var INTERVAL_CORRECT = schemes.length * 20; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
 
                     var transitionTimeout = false;
 
@@ -183,7 +183,7 @@
 
                     var startQuestionTransition = function () {
                         $scope.questionTransitionOn = true;
-                        transitionTimeout = $timeout(loadNextQuestion, 1500);
+                        transitionTimeout = $timeout(loadNextQuestion, 1000);
                     };
 
 
@@ -221,7 +221,7 @@
 
                     /*============ INITIALIZATION ============*/
 
-                    loadFakeAnswers();
+                    //loadFakeAnswers();
 
                     loadNextQuestion();
                 }
@@ -246,7 +246,7 @@
                     '<div class="ml-schemes-test-question anim-fade-in" ng-click="nextPlease()">',
                         '<div class="well">',
                             '<div class="ml-schemes-test-question-string">&nbsp;{{currentQuestion.questionString}}&nbsp;</div>',
-                            '<div class="ml-schemes-test-question-transition" ng-if="questionTransitionOn"></div>',
+                            '<div class="ml-schemes-test-question-transition" ng-if="questionTransitionOn" ng-class="{\'transition-success\': isCorrect, \'transition-danger\': !isCorrect}"></div>',
                         '</div>',
                     '</div>',
 

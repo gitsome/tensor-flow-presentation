@@ -31,16 +31,34 @@ module.exports = function (appAPI) {
                         transforms: [
                             {
                                 id: 1,
-                                script: ['cursor.forEachVowel(function(c,i) {\n',
-                                        '    if (i > 4) {\n',
-                                        '        c.set(c.getRandomCon());\n',
-                                        '    }\n',
-                                        '});'
-                                ].join('')
+                                script: [
+                                    "cursor.forEach('P', function (c, i) {",
+                                    "    c.next().set('S');",
+                                    "});",
+                                    "cursor.forEach('F', function (c, i) {",
+                                    "    c.next().set('S');",
+                                    "});",
+                                    "cursor.forEach('V', function (c, i) {",
+                                    "    c.next().set('S');",
+                                    "});",
+                                ].join('\n')
                             },
                             {
                                 id: 2,
-                                script: 'cursor.next().next().set(\'A\');'
+                                script: [
+                                    "cursor.forEach('J', function (c, i) {",
+                                    "    c.set(c.getRandomVowel());",
+                                    "});",
+                                    "cursor.forEach('H', function (c, i) {",
+                                    "    c.set(c.getRandomVowel());",
+                                    "});",
+                                    "cursor.forEach('N', function (c, i) {",
+                                    "    c.set(c.getRandomVowel());",
+                                    "});",
+                                    "cursor.forEach('O', function (c, i) {",
+                                    "    c.set('W');",
+                                    "});",
+                                ].join('\n')
                             }
                         ]
                     },
@@ -49,11 +67,41 @@ module.exports = function (appAPI) {
                         transforms: [
                             {
                                 id: 3,
-                                script: 'cursor.last().set(cursor.getRandomCon());'
+                                script: [
+                                    "cursor.forEach('O', function (c, i) {",
+                                    "    c.set(c.getRandomCon());",
+                                    "});",
+                                    "cursor.forEach('I', function (c, i) {",
+                                    "    c.set(c.getRandomCon());",
+                                    "});",
+                                ].join('\n')
                             },
                             {
                                 id: 4,
-                                script: 'cursor.first().set(cursor.getRandomVowel());'
+                                script: [
+                                    "cursor.first().set(cursor.getRandomCon());",
+                                    "cursor.last().set(cursor.getRandomCon());"
+                                ].join('\n')
+                            },
+                            {
+                                id: 5,
+                                script: [
+                                    "cursor.forEach('Z', function (c, i) {",
+                                    "    c.next().set('J');",
+                                    "});",
+                                    "cursor.forEach('X', function (c, i) {",
+                                    "    c.next().set('H');",
+                                    "});",
+                                    "cursor.forEach('Y', function (c, i) {",
+                                    "    c.next().set('N');",
+                                    "});",
+                                    "cursor.forEach('Q', function (c, i) {",
+                                    "    c.next().set('D');",
+                                    "});",
+                                    "cursor.forEach('W', function (c, i) {",
+                                    "    c.next().set('P');",
+                                    "});"
+                                ].join('\n')
                             }
                         ]
                     }
