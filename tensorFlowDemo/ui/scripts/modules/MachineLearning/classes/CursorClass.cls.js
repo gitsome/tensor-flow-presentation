@@ -3,8 +3,9 @@
     angular.module('MachineLearning').factory('CursorClass', [
 
         '$rootScope',
+        'SeededRandom',
 
-        function ($rootScope) {
+        function ($rootScope, SeededRandom) {
 
             /*============ PRIVATE STATIC VARIABLES AND METHODS ============*/
 
@@ -87,7 +88,7 @@
 
                 /*=============== FIND AND LOOP =============*/
 
-                that.eachChar = function (findChar, callBack) {
+                that.forEach = function (findChar, callBack) {
 
                     findChar = findChar.toUpperCase();
 
@@ -112,7 +113,7 @@
                     return that;
                 };
 
-                that.eachVowel = function (callBack) {
+                that.forEachVowel = function (callBack) {
 
                     var foundCursors = [];
                     for (var i=0; i < text.length; i++) {
@@ -135,7 +136,7 @@
                     return that;
                 };
 
-                that.eachCon = function (callBack) {
+                that.forEachCon = function (callBack) {
 
                     var foundCursors = [];
                     for (var i=0; i < text.length; i++) {
@@ -162,11 +163,11 @@
                 /*=============== UTILITIY METHODS =============*/
 
                 that.getRandomCon = function () {
-                    return CONS.charAt(Math.floor(Math.random() * CONS.length));
+                    return CONS.charAt(Math.floor(SeededRandom.random() * CONS.length));
                 };
 
                 that.getRandomVowel = function () {
-                    return VOWELS.charAt(Math.floor(Math.random() * VOWELS.length));
+                    return VOWELS.charAt(Math.floor(SeededRandom.random() * VOWELS.length));
                 };
 
 

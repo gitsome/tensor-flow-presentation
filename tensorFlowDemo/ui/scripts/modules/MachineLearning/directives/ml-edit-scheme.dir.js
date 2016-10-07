@@ -38,6 +38,22 @@
                         $scope.$apply();
                     }, 100);
 
+                    var deleteTransform = function (transformToDelete) {
+
+                        var foundIndex = -1;
+                        _.each($scope.scheme.transforms, function (transform, i) {
+                            if (transform.id === transformToDelete.id) {
+                                foundIndex = i;
+                            }
+                        });
+
+                        if (foundIndex !== -1) {
+                            $scope.scheme.transforms.splice(foundIndex, 1);
+                        }
+
+                        debounced_updateTransformedExamplesData();
+                    };
+
 
                     /*============ BEHAVIOR ============*/
 
@@ -70,6 +86,10 @@
                     /*============ LISTENERS ============*/
 
                     $scope.$on('ml-scheme-transform.scriptChanged', debounced_updateTransformedExamplesData);
+
+                    $scope.$on('ml-scheme-transform.delete', function (e, transform) {
+                        deleteTransform(transform);
+                    });
 
 
                     /*============ INITIALIZATION ============*/

@@ -46,14 +46,23 @@
 
                     /*============ LISTENERS ============*/
 
-                    $scope.$watch('transform.script', debounced_notifyChange);
+                    $scope.$watch('transform.script', function () {
+                        debounced_notifyChange();
+                    });
 
 
                     /*============ INITIALIZATION ============*/
 
                     new Behave({
                         textarea: $element.find('textarea')[0],
-                        replaceTab: true
+                        replaceTab: false,
+                        softTabs: true,
+                        tabSize: 4,
+                        autoOpen: false,
+                        overwrite: false,
+                        autoStrip: false,
+                        autoIndent: true,
+                        fence: false
                     });
                 }
             ],
@@ -64,7 +73,7 @@
 
                     '<div class="row">',
                         '<div class="col-md-10">',
-                            '<textarea ng-model="transform.script" rows="7"></textarea>',
+                            '<textarea ng-model="transform.script" ng-model-options="{allowInvalid:true}" rows="7"></textarea>',
                         '</div>',
                         '<div class="col-md-2 text-right ml-scheme-item-controls">',
                             '<button class="btn btn-default btn-full-width" ng-click="delete()"><i class="fa fa-times-circle"></i></button>',

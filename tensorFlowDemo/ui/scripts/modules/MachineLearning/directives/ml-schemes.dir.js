@@ -17,24 +17,39 @@
                 '$timeout',
                 'Moment',
                 'SchemeService',
+                'ML_VIEW_MODE',
 
-                function ($scope, $element, $timeout, Moment, SchemeService) {
+                function ($scope, $element, $timeout, Moment, SchemeService, ML_VIEW_MODE) {
 
                     /*============ MODEL ============*/
 
+                    $scope.schemesMode = 'view';
+
                     $scope.schemes = SchemeService.get();
 
-                    $scope.creating = false;
+                    $scope.loading = false;
+
+                    $scope.allowEdit = ML_VIEW_MODE === 'edit';
+                    $scope.allowTest = ML_VIEW_MODE === 'view';
 
 
                     /*============ MODEL DEPENDENT METHODS ============*/
+
+                    var deleteScheme = function (schemeToDelete) {
+                        $scope.loading = true;
+
+                        SchemeService.deleteScheme(schemeToDelete).finally(function () {
+                            $scope.loading = false;
+                            $scope.schemes = SchemeService.get();
+                        });
+                    };
 
 
                     /*============ BEHAVIOR ============*/
 
                     $scope.create = function () {
 
-                        $scope.creating = true;
+                        $scope.loading = true;
 
                         SchemeService.updateOrCreateScheme({
                             name: new Moment().format('MMMM Do YYYY, h:mm:ss a'),
@@ -47,20 +62,29 @@
                             }, 1000);
 
                         }, function () {
-                            $scope.creating = false;
+                            $scope.loading = false;
                         });
+                    };
+
+                    $scope.takeTest = function () {
+                        $scope.schemesMode = 'test';
                     };
 
 
                     /*============ LISTENERS ============*/
 
                     $scope.$on('ml-scheme-item.delete', function (e, scheme) {
-                        $scope.$emit('ml-schemes.deleteScheme', scheme);
+                        deleteScheme(scheme);
                     });
 
                     $scope.$on('ml-scheme-item.edit', function (e, scheme) {
                         $scope.$emit('ml-schemes.editScheme', scheme);
                     });
+
+                    $scope.$on('ml-schemes-test.complete', function () {
+                        $scope.schemesMode = 'view';
+                    });
+
 
 
                     /*============ INITIALIZATION ============*/
@@ -70,7 +94,7 @@
 
             template: [
 
-                '<div class="row">',
+                '<div class="row anim-fade-in" ng-if="schemesMode === \'view\'">',
                     '<div class="col-xs-12">',
 
                         '<div class="row view-title">',
@@ -80,21 +104,27 @@
                             '</div>',
 
                             '<div class="col-xs-5 text-right">',
-                                '<button class="btn btn-primary" ng-click="create()" ng-disabled="creating">',
-                                    '<i class="fa fa-magic noanim" ng-if="!creating"></i>',
-                                    '<i class="fa fa-spin fa-spinner noanim" ng-if="creating"></i>',
+                                '<button class="btn btn-primary" ng-if="allowEdit" ng-click="create()" ng-disabled="loading">',
+                                    '<i class="fa fa-magic noanim" ng-if="!loading"></i>',
+                                    '<i class="fa fa-spin fa-spinner noanim" ng-if="loading"></i>',
                                     ' Create New Scheme',
                                 '</button>',
                             '</div>',
 
                         '</div>',
 
-                        '<div class="alert alert-info" ng-if="!schemes || !schemes.length"><i class="fa fa-info-circle"></i><strong>No Schemes Yet!</strong> Try refreshing or create a new scheme.</div>',
+                        '<div class="alert alert-info" ng-if="!schemes || !schemes.length"><i class="fa fa-info-circle"></i> <strong>No Schemes Yet!</strong> Try refreshing or create a new scheme.</div>',
 
-                        '<ml-scheme-item class="anim-el-slide-right" ng-repeat="scheme in schemes track by scheme.name" scheme="scheme" is-disabled="creating"></ml-scheme-item>',
+                        '<ml-scheme-item class="anim-el-slide-right" ng-repeat="scheme in schemes track by scheme.name" scheme="scheme" is-disabled="loading"></ml-scheme-item>',
+
+                        '<div class="ml-schemes-test-container" ng-if="allowTest">',
+                            '<button class="btn btn-primary btn-lg btn-full-width" ng-click="takeTest()"><i class="fa fa-check-circle"></i> Take the Test!</button>',
+                        '</div>',
 
                     '</div>',
-                '</div>'
+                '</div>',
+
+                '<ml-schemes-test class="anim-fade-in" ng-if="schemesMode === \'test\'"></ml-schemes-test>'
 
             ].join('')
         };

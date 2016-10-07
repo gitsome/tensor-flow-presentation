@@ -112,6 +112,8 @@
             // order matters if you have dependencies amongst the services TODO (Implement a dependency injection system so this is done automatically)
             appAPI.services['schemes'] = require('./services/schemes.svc.js')(appAPI);
 
+            appAPI.services['mode'] = require('./services/mode.svc.js')(appAPI);
+
             resolve();
         });
     };

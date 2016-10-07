@@ -7,18 +7,18 @@ module.exports = function(app, routeAPI){
     var services = routeAPI.services;
     var server = routeAPI.server;
 
+
     /*==================================== INDEX PAGE ====================================*/
 
-    //send everything else
     app.use(function(req, res) {
-        //generate html that contains the initializations scripts
-        //populated with enough environment info as needed for resource loading and web sockets
-        console.log("schemes:", services.schemes.get());
+
+        console.log("MODE:", services.mode.get());
 
         res.render('index', {
             title: 'Machine Learning',
             session: {
-                schemes : JSON.stringify(services.schemes.get())
+                schemes : JSON.stringify(services.schemes.get()),
+                mode: services.mode.get()
             }
         });
     });

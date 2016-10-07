@@ -14,15 +14,17 @@
 
             /*============ PRIVATE METHODS AND VARIABLES ============*/
 
-            var STRING_LENGTH = 10;
+            var STRING_LENGTH = 7;
 
-            var getRandomString = function (stringLength) {
+            var getRandomString = function (stringLength, useRealRandom) {
 
                 var text = "";
                 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+                var randomNum;
                 for( var i=0; i < stringLength; i++) {
-                    text += possible.charAt(Math.floor(SeededRandom.random() * possible.length));
+                    randomNum = useRealRandom ? Math.random() : SeededRandom.random();
+                    text += possible.charAt(Math.floor(randomNum * possible.length));
                 }
 
                 return text;
@@ -54,8 +56,43 @@
                 }
             };
 
+            var beforeString;
+            var afterString;
+            var hasChanged;
+            var getRandomStringTransformPair = function (transforms, useRealRandom) {
+
+                beforeString = getRandomString(STRING_LENGTH, useRealRandom);
+                afterString = transformString(beforeString, transforms);
+                hasChanged = beforeString !== afterString && afterString !== 'ERROR';
+
+                return {
+                    before: beforeString,
+                    after: afterString,
+                    hasChange: hasChanged
+                };
+            };
+
 
             /*============ SERVICE DEFINITION ============*/
+
+            StringTransformService.getRandomStringFromTransforms = function (transforms) {
+
+                var currentStringTransformPair;
+                var hasFoundModifiedString = false;
+                var currentAttempt = 0;
+                var MAX_ATTEMPTS = 300;
+
+                while (currentAttempt < MAX_ATTEMPTS && !hasFoundModifiedString) {
+
+                    currentStringTransformPair = getRandomStringTransformPair(transforms, true);
+
+                    hasFoundModifiedString = currentStringTransformPair.hasChange;
+
+                    currentAttempt++;
+                }
+
+                return currentStringTransformPair.after;
+            };
 
             StringTransformService.generateStringTransformPairsData = function (transforms, count) {
 
@@ -65,21 +102,16 @@
 
                 var totalChanged = 0;
 
+                var currentRandomStringTransformPair;
                 for (var i=0; i < count; i++) {
 
-                    var beforeString = getRandomString(STRING_LENGTH);
-                    var afterString = transformString(beforeString, transforms);
-                    var hasChanged = beforeString !== afterString && afterString !== 'ERROR';
+                    currentRandomStringTransformPair = getRandomStringTransformPair(transforms);
 
-                    if (hasChanged) {
+                    if (currentRandomStringTransformPair.hasChange) {
                         totalChanged++;
                     }
 
-                    transformPairs.push({
-                        before: beforeString,
-                        after: afterString,
-                        hasChange: hasChanged
-                    });
+                    transformPairs.push(currentRandomStringTransformPair);
                 }
 
                 return {

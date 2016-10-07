@@ -14,7 +14,7 @@ var sessionConfigs = sessionConfigs || {};
 
     /*======================== LOAD VALUES/CONSTANTS ========================*/
 
-
+    angular.module('MachineLearning').value('ML_VIEW_MODE', sessionConfigs.mode);
 
 
     /*======================== LOAD CONFIGURATIONS ========================*/

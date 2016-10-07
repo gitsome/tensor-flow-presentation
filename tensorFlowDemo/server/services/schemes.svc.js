@@ -27,12 +27,48 @@ module.exports = function (appAPI) {
 
                 SchemesService.set([
                     {
-                        name: 'Johns',
-                        transforms: []
+                        name: 'YES',
+                        transforms: [
+                            {
+                                id: 1,
+                                script: ['cursor.forEachVowel(function(c,i) {\n',
+                                        '    if (i > 4) {\n',
+                                        '        c.set(c.getRandomCon());\n',
+                                        '    }\n',
+                                        '});'
+                                ].join('')
+                            },
+                            {
+                                id: 2,
+                                script: 'cursor.next().next().set(\'A\');'
+                            }
+                        ]
                     },
                     {
-                        name: 'Kevins',
-                        transforms: []
+                        name: 'NO',
+                        transforms: [
+                            {
+                                id: 3,
+                                script: 'cursor.last().set(cursor.getRandomCon());'
+                            },
+                            {
+                                id: 4,
+                                script: 'cursor.first().set(cursor.getRandomVowel());'
+                            }
+                        ]
+                    },
+                    {
+                        name: 'MAYBE',
+                        transforms: [
+                            {
+                                id: 3,
+                                script: 'cursor.last().set(cursor.getRandomCon());'
+                            },
+                            {
+                                id: 4,
+                                script: 'cursor.first().set(cursor.getRandomVowel());'
+                            }
+                        ]
                     }
                 ]);
 

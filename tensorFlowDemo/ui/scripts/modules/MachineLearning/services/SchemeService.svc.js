@@ -30,8 +30,27 @@
                 return deferred.promise;
             };
 
-            var deleteScheme = function () {
+            var deleteScheme = function (schemeToDelete) {
+                var deferred = $q.defer();
 
+                $timeout(function () {
+
+                    var foundIndex = -1;
+
+                    _.each(schemes, function (scheme, i) {
+                        if (scheme.name === schemeToDelete.name) {
+                            foundIndex = i;
+                        }
+                    });
+
+                    if (foundIndex !== -1) {
+                        schemes.splice(foundIndex, 1);
+                    }
+                    deferred.resolve();
+
+                }, Math.round(Math.random()*400));
+
+                return deferred.promise;
             };
 
 
@@ -50,7 +69,7 @@
             };
 
             SchemeService.deleteScheme = function (scheme) {
-                deleteScheme(scheme);
+                return deleteScheme(scheme);
             };
 
 

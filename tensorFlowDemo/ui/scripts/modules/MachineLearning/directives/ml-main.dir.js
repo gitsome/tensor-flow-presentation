@@ -19,6 +19,8 @@
 
                     $scope.mode = 'main';
 
+                    $scope.loading = false;
+
                     $scope.currentScheme = false;
 
 
@@ -31,10 +33,6 @@
                     $scope.$on('ml-schemes.editScheme', function (e, scheme) {
                         $scope.currentScheme = scheme;
                         $scope.mode = 'edit';
-                    });
-
-                    $scope.$on('ml-schemes.deleteScheme', function (e, scheme) {
-                        console.log("delete");
                     });
 
                     $scope.$on('ml-edit-scheme.done', function () {
