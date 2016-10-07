@@ -59,6 +59,10 @@ module.exports = function (appAPI) {
                                     "    c.set('W');",
                                     "});",
                                 ].join('\n')
+                            },
+                            {
+                                id: 3,
+                                script: "cursor.moveTo(4).set(cursor.getRandomVowel());"
                             }
                         ]
                     },
@@ -66,7 +70,7 @@ module.exports = function (appAPI) {
                         name: 'B',
                         transforms: [
                             {
-                                id: 3,
+                                id: 4,
                                 script: [
                                     "cursor.forEach('O', function (c, i) {",
                                     "    c.set(c.getRandomCon());",
@@ -77,14 +81,14 @@ module.exports = function (appAPI) {
                                 ].join('\n')
                             },
                             {
-                                id: 4,
+                                id: 5,
                                 script: [
                                     "cursor.first().set(cursor.getRandomCon());",
                                     "cursor.last().set(cursor.getRandomCon());"
                                 ].join('\n')
                             },
                             {
-                                id: 5,
+                                id: 6,
                                 script: [
                                     "cursor.forEach('Z', function (c, i) {",
                                     "    c.next().set('J');",
@@ -102,6 +106,10 @@ module.exports = function (appAPI) {
                                     "    c.next().set('P');",
                                     "});"
                                 ].join('\n')
+                            },
+                            {
+                                id: 7,
+                                script: "cursor.moveTo(4).set(cursor.getRandomCon());"
                             }
                         ]
                     }

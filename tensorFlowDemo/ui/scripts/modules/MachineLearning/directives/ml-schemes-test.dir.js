@@ -23,11 +23,11 @@
 
                     var schemes = SchemeService.get();
 
-                    var MAX_QUESTIONS = schemes.length * 70; // I think this should be some type of exponential... would get progressively harder with more
+                    var MAX_QUESTIONS = schemes.length * 150; // I think this should be some type of exponential... would get progressively harder with more
 
-                    var INTERVAL_PERCENT_CORRECT = 80; // this also needs to scale with the number of schemes
+                    var INTERVAL_PERCENT_CORRECT = 75; // this also needs to scale with the number of schemes
 
-                    var INTERVAL_CORRECT = schemes.length * 20; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
+                    var INTERVAL_CORRECT = schemes.length * 12; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
 
                     var transitionTimeout = false;
 
@@ -132,7 +132,12 @@
                         // track the hightest interval correctness in case they don't pass within the max ammount of questions alloted
                         $scope.maxIntervalCorrectPercent = Math.max($scope.maxIntervalCorrectPercent, $scope.currentIntervalPercentCorrect);
 
-                        return ($scope.currentIntervalPercentCorrect >= INTERVAL_PERCENT_CORRECT);
+                        var hasProperIntervalPercent = $scope.currentIntervalPercentCorrect >= INTERVAL_PERCENT_CORRECT;
+
+                        // we should leave on a win
+                        var lastAnswerWasCorrect = $scope.answers[$scope.answers.length - 1] === 1;
+
+                        return hasProperIntervalPercent && lastAnswerWasCorrect;
                     };
 
                     var getRandomSchemeString = function (scheme) {
