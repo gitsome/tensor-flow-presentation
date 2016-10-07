@@ -48,7 +48,7 @@ var d3 = d3 || {};
 
                         if (startIndex < 0) {
 
-                            return 0;
+                            return (1 / $scope.schemesCount);
 
                         } else {
 
@@ -101,7 +101,7 @@ var d3 = d3 || {};
                         var barsArea = svg.select('.bars');
 
                         var xScale = d3.scale.linear()
-                            .domain([0, answerProgressData.length])
+                            .domain([0, answerProgressData.length - 1])
                             .range([0, graphWidth]);
 
 
@@ -117,12 +117,12 @@ var d3 = d3 || {};
                             .range([graphHeight, 0]);
 
                         var startingLine = d3.svg.line()
-                            .x(function(d, i) { return xScale(i + 1); })
+                            .x(function(d, i) { return xScale(i); })
                             .y(function(d) { return yScale(0); })
                             .interpolate("basis");
 
                         var endingLine = d3.svg.line()
-                            .x(function(d, i) { return xScale(i + 1); })
+                            .x(function(d, i) { return xScale(i); })
                             .y(function(d) { return yScale(d); })
                             .interpolate("basis");
 
@@ -135,22 +135,23 @@ var d3 = d3 || {};
                         });
 
                         var yPercentScale = d3.scale.linear()
-                            .domain([minIntervalPercent, maxIntervalPercent])
+                            .domain([0, 100])
                             .range([graphHeight, 0]);
 
                         var startingPercentLine = d3.svg.line()
-                            .x(function(d, i) { return xScale(i + 1); })
-                            .y(function(d) { return yPercentScale(0); })
+                            .x(function(d, i) { return xScale(i); })
+                            .y(function(d) { return yPercentScale((100 / $scope.schemesCount)); })
                             .interpolate("basis");
 
                         var endingPercentLine = d3.svg.line()
-                            .x(function(d, i) { return xScale(i + 1); })
+                            .x(function(d, i) { return xScale(i); })
                             .y(function(d) { return yPercentScale(d); })
                             .interpolate("basis");
 
 
                         var xAxis = d3.svg.axis().scale(xScale)
-                            .orient("bottom").ticks(answerProgressData.length > 20 ? 10 : 5);
+                            .orient("bottom").ticks(answerProgressData.length > 20 ? 10 : 5)
+                            .tickFormat(function(d,i){ return d + 1; });
 
                         var yAxis = d3.svg.axis().scale(yScale)
                             .orient("left").ticks(5);
@@ -177,14 +178,15 @@ var d3 = d3 || {};
                             .attr("class", "axis y-percent y-percent-random");
 
                             halfPercentInterval.append('line')
-                                .style("stroke-dasharray", ("3, 3"))
-                                .attr('x1', xScale(1))
+                                .style("stroke-dasharray", ("10, 8"))
+                                .attr('stroke-width', '1.5')
+                                .attr('x1', xScale(0))
                                 .attr('y1', yPercentScale(Math.round(100 / $scope.schemesCount)))
-                                .attr('x2', xScale(answerProgressData.length))
+                                .attr('x2', xScale(answerProgressData.length - 1))
                                 .attr('y2', yPercentScale(Math.round(100 / $scope.schemesCount)));
 
                             halfPercentInterval.append('text')
-                                .attr("x", xScale(answerProgressData.length - 1) + 20)
+                                .attr("x", graphWidth + 15)
                                   .attr("y", yPercentScale(Math.round(100 / $scope.schemesCount)) + 8)
                                   .text(Math.round(100 / $scope.schemesCount) + '%')
                                   .attr("font-family", "sans-serif")
@@ -195,15 +197,16 @@ var d3 = d3 || {};
                             .attr("class", "axis y-percent y-percent-threshold");
 
                             thresholdPercentInterval.append('line')
-                                .style("stroke-dasharray", ("3, 3"))
-                                .attr('x1', xScale(1))
+                                .style("stroke-dasharray", ("10, 8"))
+                                .attr('stroke-width', '3')
+                                .attr('x1', xScale(0))
                                 .attr('y1', yPercentScale($scope.percentThreshold))
-                                .attr('x2', xScale(answerProgressData.length))
+                                .attr('x2', xScale(answerProgressData.length - 1))
                                 .attr('y2', yPercentScale($scope.percentThreshold));
 
                             thresholdPercentInterval.append('text')
-                                .attr("x", xScale(answerProgressData.length - 1) + 20)
-                                  .attr("y", 8)
+                                .attr("x", graphWidth + 15)
+                                  .attr("y", yPercentScale($scope.percentThreshold) + 8)
                                   .text($scope.percentThreshold + '%')
                                   .attr("font-family", "sans-serif")
                                   .attr("font-size", "24px")

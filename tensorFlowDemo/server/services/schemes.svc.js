@@ -27,7 +27,7 @@ module.exports = function (appAPI) {
 
                 SchemesService.set([
                     {
-                        name: 'YES',
+                        name: 'A',
                         transforms: [
                             {
                                 id: 1,
@@ -45,20 +45,7 @@ module.exports = function (appAPI) {
                         ]
                     },
                     {
-                        name: 'NO',
-                        transforms: [
-                            {
-                                id: 3,
-                                script: 'cursor.last().set(cursor.getRandomCon());'
-                            },
-                            {
-                                id: 4,
-                                script: 'cursor.first().set(cursor.getRandomVowel());'
-                            }
-                        ]
-                    },
-                    {
-                        name: 'MAYBE',
+                        name: 'B',
                         transforms: [
                             {
                                 id: 3,
