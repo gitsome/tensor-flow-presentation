@@ -53,6 +53,16 @@
                 return deferred.promise;
             };
 
+            var saveData = function () {
+                var deferred = $q.defer();
+
+                $timeout(function () {
+                    deferred.resolve();
+                }, 1000);
+
+                return deferred.promise;
+            };
+
 
             /*============ SERVICE DEFINITION ============*/
 
@@ -70,6 +80,10 @@
 
             SchemeService.deleteScheme = function (scheme) {
                 return deleteScheme(scheme);
+            };
+
+            SchemeService.saveData = function (data) {
+                return saveData(data);
             };
 
 

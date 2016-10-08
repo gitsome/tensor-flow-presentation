@@ -12,8 +12,9 @@
 
                 '$scope',
                 '$element',
+                'LoadingService',
 
-                function ($scope, $element) {
+                function ($scope, $element, LoadingService) {
 
                     /*============ MODEL ============*/
 
@@ -22,6 +23,8 @@
                     $scope.loading = false;
 
                     $scope.currentScheme = false;
+
+                    $scope.loadingService = LoadingService;
 
 
                     /*============ MODEL DEPENDENT METHODS ============*/
@@ -58,6 +61,12 @@
 
                         '</div>',
                     '</div>',
+                '</div>',
+
+                '<div class="progress-loader" ng-if="loadingService.isLoading">',
+                    '<span class="progress-loader-spinner">',
+                        '<i class="fa fa-spinner fa-spin"></i>',
+                    '</span>',
                 '</div>'
 
             ].join('')

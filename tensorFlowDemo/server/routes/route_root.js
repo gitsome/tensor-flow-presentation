@@ -12,8 +12,6 @@ module.exports = function(app, routeAPI){
 
     app.use(function(req, res) {
 
-        console.log("MODE:", services.mode.get());
-
         res.render('index', {
             title: 'Machine Learning',
             session: {

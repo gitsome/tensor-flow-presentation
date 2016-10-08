@@ -17,9 +17,11 @@
                 '$timeout',
                 'Moment',
                 'SchemeService',
+                'DataGeneratorService',
+                'LoadingService',
                 'ML_VIEW_MODE',
 
-                function ($scope, $element, $timeout, Moment, SchemeService, ML_VIEW_MODE) {
+                function ($scope, $element, $timeout, Moment, SchemeService, DataGeneratorService, LoadingService, ML_VIEW_MODE) {
 
                     /*============ MODEL ============*/
 
@@ -30,7 +32,7 @@
                     $scope.loading = false;
 
                     $scope.allowEdit = ML_VIEW_MODE === 'edit';
-                    $scope.allowTest = ML_VIEW_MODE === 'view';
+                    $scope.ML_VIEW_MODE = ML_VIEW_MODE;
 
 
                     /*============ MODEL DEPENDENT METHODS ============*/
@@ -68,6 +70,18 @@
 
                     $scope.takeTest = function () {
                         $scope.schemesMode = 'test';
+                    };
+
+                    $scope.generateData = function () {
+
+                        LoadingService.setIsLoading(true);
+
+                        DataGeneratorService.generateData(SchemeService.get()).then(function (data) {
+                            console.log("the data:", data);
+                            return SchemeService.saveData(data);
+                        }).finally(function () {
+                            LoadingService.setIsLoading(false);
+                        });
                     };
 
 
@@ -117,8 +131,23 @@
 
                         '<ml-scheme-item class="anim-el-slide-right" ng-repeat="scheme in schemes track by scheme.name" scheme="scheme" is-disabled="loading"></ml-scheme-item>',
 
-                        '<div class="ml-schemes-test-container" ng-if="allowTest">',
-                            '<button class="btn btn-primary btn-lg btn-full-width" ng-click="takeTest()"><i class="fa fa-check-circle"></i> Take the Test!</button>',
+                        '<div class="ml-schemes-test-container" ng-if="ML_VIEW_MODE === \'edit\'">',
+                            '<div class="row">',
+                                '<div class="col-md-6">',
+                                    '<button class="btn btn-default btn-lg btn-full-width" ng-click="generateData()"><i class="fa fa-cog"></i> Generate Data</button>',
+                                '</div>',
+                                '<div class="col-md-6">',
+                                    '<button class="btn btn-primary btn-lg btn-full-width" ng-click="takeTest()"><i class="fa fa-check-circle"></i> Take the Test!</button>',
+                                '</div>',
+                            '</div>',
+                        '</div>',
+
+                        '<div class="ml-schemes-test-container" ng-if="ML_VIEW_MODE === \'view\'">',
+                            '<div class="row">',
+                                '<div class="col-xs-12">',
+                                    '<button class="btn btn-primary btn-lg btn-full-width" ng-click="takeTest()"><i class="fa fa-check-circle"></i> Take the Test!</button>',
+                                '</div>',
+                            '</div>',
                         '</div>',
 
                     '</div>',

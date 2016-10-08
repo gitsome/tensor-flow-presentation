@@ -23,11 +23,11 @@
 
                     var schemes = SchemeService.get();
 
-                    var MAX_QUESTIONS = schemes.length * 150; // I think this should be some type of exponential... would get progressively harder with more
+                    var MAX_QUESTIONS = schemes.length * 100; // I think this should be some type of exponential... would get progressively harder with more
 
-                    var INTERVAL_PERCENT_CORRECT = 75; // this also needs to scale with the number of schemes
+                    var INTERVAL_PERCENT_CORRECT = 80; // this also needs to scale with the number of schemes
 
-                    var INTERVAL_CORRECT = schemes.length * 12; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
+                    var INTERVAL_CORRECT = schemes.length * 10; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
 
                     var transitionTimeout = false;
 
@@ -121,7 +121,7 @@
                             return false;
                         }
 
-                        var lastAnswerSet = $scope.answers.slice(($scope.answers.length - 1) - INTERVAL_CORRECT, ($scope.answers.length - 1));
+                        var lastAnswerSet = $scope.answers.slice(($scope.answers.length - 1) - (INTERVAL_CORRECT - 1), ($scope.answers.length - 1));
 
                         var totalCorrect = _.reduce(lastAnswerSet, function (memo, answer) {
                             return memo + answer;
@@ -226,7 +226,7 @@
 
                     /*============ INITIALIZATION ============*/
 
-                    //loadFakeAnswers();
+                    // loadFakeAnswers();
 
                     loadNextQuestion();
                 }
