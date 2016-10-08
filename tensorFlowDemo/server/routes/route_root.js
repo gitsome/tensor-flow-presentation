@@ -15,7 +15,6 @@ module.exports = function(app, routeAPI){
         res.render('index', {
             title: 'Machine Learning',
             session: {
-                schemes : JSON.stringify(services.schemes.get()),
                 mode: services.mode.get()
             }
         });

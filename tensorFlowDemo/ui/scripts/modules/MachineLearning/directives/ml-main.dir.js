@@ -13,8 +13,9 @@
                 '$scope',
                 '$element',
                 'LoadingService',
+                'SchemeService',
 
-                function ($scope, $element, LoadingService) {
+                function ($scope, $element, LoadingService, SchemeService) {
 
                     /*============ MODEL ============*/
 
@@ -40,6 +41,10 @@
 
                     $scope.$on('ml-edit-scheme.done', function () {
                         $scope.mode = 'main';
+                        $scope.loadingService.setIsLoading(true);
+                        SchemeService.updateOrCreateScheme($scope.currentScheme).finally(function () {
+                            $scope.loadingService.setIsLoading(false);
+                        });
                         $scope.currentScheme = false;
                     });
 

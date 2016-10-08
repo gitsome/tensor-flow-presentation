@@ -15,7 +15,6 @@
         <script>
             // load the server side configs (just to make sure nodetypes get it)
             var sessionConfigs = {
-                schemes: {{& session.schemes }}, //the user object from the session
                 mode: '{{ session.mode }}'
             };
         </script>

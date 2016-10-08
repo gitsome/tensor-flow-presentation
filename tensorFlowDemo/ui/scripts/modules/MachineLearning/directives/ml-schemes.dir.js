@@ -27,7 +27,7 @@
 
                     $scope.schemesMode = 'view';
 
-                    $scope.schemes = SchemeService.get();
+                    $scope.schemes = [];
 
                     $scope.loading = false;
 
@@ -37,12 +37,21 @@
 
                     /*============ MODEL DEPENDENT METHODS ============*/
 
-                    var deleteScheme = function (schemeToDelete) {
-                        $scope.loading = true;
+                    var loadSchemes = function () {
 
-                        SchemeService.deleteScheme(schemeToDelete).finally(function () {
-                            $scope.loading = false;
-                            $scope.schemes = SchemeService.get();
+                        LoadingService.setIsLoading(true);
+                        SchemeService.get().then(function (schemes_in) {
+                            $scope.schemes = schemes_in;
+                        }).finally(function () {
+                            LoadingService.setIsLoading(false);
+                        });
+                    };
+
+                    var deleteScheme = function (schemeToDelete) {
+
+                        LoadingService.setIsLoading(true);
+                        SchemeService.deleteScheme(schemeToDelete).then(function () {
+                            return loadSchemes();
                         });
                     };
 
@@ -51,20 +60,27 @@
 
                     $scope.create = function () {
 
-                        $scope.loading = true;
+                        LoadingService.setIsLoading(true);
 
-                        SchemeService.updateOrCreateScheme({
-                            name: new Moment().format('MMMM Do YYYY, h:mm:ss a'),
+                        var newScheme = {
+                            name: 'sweet',
                             transforms: []
-                        }).then(function (newScheme) {
+                        };
 
-                            $scope.schemes = SchemeService.get();
-                            $timeout(function () {
-                                $scope.$emit('ml-schemes.editScheme', newScheme);
-                            }, 1000);
+                        SchemeService.updateOrCreateScheme(newScheme).then(function () {
+
+                            return SchemeService.get().then(function (schemes_in) {
+
+                                $scope.schemes = schemes_in;
+
+                                $timeout(function () {
+                                    $scope.$emit('ml-schemes.editScheme', newScheme);
+                                    LoadingService.setIsLoading(false);
+                                }, 1000);
+                            });
 
                         }, function () {
-                            $scope.loading = false;
+                            LoadingService.setIsLoading(false);
                         });
                     };
 
@@ -76,11 +92,13 @@
 
                         LoadingService.setIsLoading(true);
 
-                        DataGeneratorService.generateData(SchemeService.get()).then(function (data) {
-                            console.log("the data:", data);
-                            return SchemeService.saveData(data);
-                        }).finally(function () {
-                            LoadingService.setIsLoading(false);
+                        SchemeService.get().then(function (schemes_in) {
+
+                            DataGeneratorService.generateData(schemes_in).then(function (data) {
+                                return SchemeService.saveData(data);
+                            }).finally(function () {
+                                LoadingService.setIsLoading(false);
+                            });
                         });
                     };
 
@@ -103,6 +121,7 @@
 
                     /*============ INITIALIZATION ============*/
 
+                    loadSchemes();
                 }
             ],
 
@@ -129,7 +148,7 @@
 
                         '<div class="alert alert-info" ng-if="!schemes || !schemes.length"><i class="fa fa-info-circle"></i> <strong>No Schemes Yet!</strong> Try refreshing or create a new scheme.</div>',
 
-                        '<ml-scheme-item class="anim-el-slide-right" ng-repeat="scheme in schemes track by scheme.name" scheme="scheme" is-disabled="loading"></ml-scheme-item>',
+                        '<ml-scheme-item class="anim-el-slide-right" ng-repeat="scheme in schemes" scheme="scheme" is-disabled="loading"></ml-scheme-item>',
 
                         '<div class="ml-schemes-test-container" ng-if="ML_VIEW_MODE === \'edit\'">',
                             '<div class="row">',

@@ -21,13 +21,13 @@
 
                     /*============ PRIVATE VARIABLES =============*/
 
-                    var schemes = SchemeService.get();
+                    var schemes = [];
 
-                    var MAX_QUESTIONS = schemes.length * 100; // I think this should be some type of exponential... would get progressively harder with more
+                    var MAX_QUESTIONS = null;
 
                     var INTERVAL_PERCENT_CORRECT = 80; // this also needs to scale with the number of schemes
 
-                    var INTERVAL_CORRECT = schemes.length * 10; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
+                    var INTERVAL_CORRECT = null;
 
                     var transitionTimeout = false;
 
@@ -51,21 +51,38 @@
                     $scope.currentIntervalPercentCorrect = 0;
                     $scope.maxIntervalCorrectPercent = 0;
 
-                    $scope.schemeOptions = _.map(schemes, function (scheme) {
-                        return {
-                            name: scheme.name,
-                            transformCount: scheme.transforms.length
-                        };
-                    });
+                    $scope.schemeOptions = null;
+                    $scope.schemesCount = null;
 
                     $scope.answers = [];
 
                     $scope.passed = 'FALSE';
 
-                    $scope.schemesCount = schemes.length;
+
 
 
                     /*============ MODEL DEPENDENT METHODS ============*/
+
+                    var loadSchemes = function () {
+
+                        return SchemeService.get().then(function (schemes_in) {
+
+                            schemes = schemes_in;
+
+                            $scope.schemeOptions = _.map(schemes, function (scheme) {
+                                return {
+                                    name: scheme.name,
+                                    transformCount: scheme.transforms.length
+                                };
+                            });
+
+                            $scope.schemesCount = schemes.length;
+
+                            MAX_QUESTIONS = schemes.length * 100; // I think this should be some type of exponential... would get progressively harder with more
+
+                            INTERVAL_CORRECT = schemes.length * 10; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
+                        });
+                    };
 
                     var loadFakeAnswers = function () {
 
@@ -226,9 +243,14 @@
 
                     /*============ INITIALIZATION ============*/
 
-                    // loadFakeAnswers();
+                    $scope.questionLoading = true;
 
-                    loadNextQuestion();
+                    loadSchemes().then(function () {
+
+                        // loadFakeAnswers();
+
+                        loadNextQuestion();
+                    });
                 }
             ],
 

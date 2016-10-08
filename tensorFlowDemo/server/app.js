@@ -114,6 +114,8 @@
 
             appAPI.services['mode'] = require('./services/mode.svc.js')(appAPI);
 
+            appAPI.services['mlData'] = require('./services/mlData.svc.js')(appAPI);
+
             resolve();
         });
     };

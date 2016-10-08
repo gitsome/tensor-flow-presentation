@@ -5,8 +5,9 @@
         '$rootScope',
         '$q',
         '$timeout',
+        '$http',
 
-        function ($rootScope, $q, $timeout) {
+        function ($rootScope, $q, $timeout, $http) {
 
             /*============ SERVICE DECLARATION ============*/
 
@@ -18,27 +19,15 @@
             var schemes = [];
 
             var updateOrCreateScheme = function (scheme) {
-                var deferred = $q.defer();
-
-                $timeout(function () {
-
-                    schemes.push(scheme);
-                    deferred.resolve(scheme);
-
-                }, Math.round(Math.random()*400));
-
-                return deferred.promise;
+                return $http.post('/services/schemes', {schemeName: scheme.name, schemeTransforms: scheme.transforms});
             };
 
-            var deleteScheme = function (schemeToDelete) {
-                var deferred = $q.defer();
-
-                $timeout(function () {
-
+            var deleteScheme = function (scheme) {
+                return $http.delete('/services/schemes', {params: {schemeName: scheme.name}}).then(function () {
                     var foundIndex = -1;
 
                     _.each(schemes, function (scheme, i) {
-                        if (scheme.name === schemeToDelete.name) {
+                        if (scheme.name === scheme.name) {
                             foundIndex = i;
                         }
                     });
@@ -46,21 +35,22 @@
                     if (foundIndex !== -1) {
                         schemes.splice(foundIndex, 1);
                     }
-                    deferred.resolve();
 
-                }, Math.round(Math.random()*400));
-
-                return deferred.promise;
+                    return schemes;
+                });
             };
 
-            var saveData = function () {
-                var deferred = $q.defer();
+            var saveData = function (mlData) {
+                return $http.post('/services/savedata', mlData).then(function (results) {
+                    return results;
+                });
+            };
 
-                $timeout(function () {
-                    deferred.resolve();
-                }, 1000);
-
-                return deferred.promise;
+            var getSchemes = function () {
+                return $http.get('/services/schemes').then(function (results) {
+                    schemes = results.data;
+                    return schemes;
+                });
             };
 
 
@@ -71,7 +61,7 @@
             };
 
             SchemeService.get = function () {
-                return schemes;
+                return getSchemes();
             };
 
             SchemeService.updateOrCreateScheme = function (scheme) {

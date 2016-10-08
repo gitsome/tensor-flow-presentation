@@ -64,7 +64,6 @@
                     $scope.addTransform = function () {
 
                         $scope.scheme.transforms.push({
-                            id: Math.round(Math.random()*99999999999),
                             script: ''
                         });
                     };
@@ -122,11 +121,6 @@
                                 '<ng-form name="schemeForm">',
 
                                     '<div class="form-section">',
-                                        '<label for="scheme-name">Scheme Name</label>',
-                                        '<input id="scheme-name" class="form-control" type="text" ng-model="scheme.name"/>',
-                                    '</div>',
-
-                                    '<div class="form-section">',
                                         '<div class="row">',
 
                                             '<div class="col-xs-12">',
@@ -143,7 +137,7 @@
                                                 '</div>',
 
                                                 '<div>',
-                                                    '<ml-scheme-transform class="anim-el-slide-left" ng-repeat="transform in scheme.transforms track by transform.id" transform="transform"></ml-scheme-transform>',
+                                                    '<ml-scheme-transform class="anim-el-slide-left" ng-repeat="transform in scheme.transforms" transform="transform"></ml-scheme-transform>',
                                                 '</div>',
 
                                                 '<div class="text-right control-box">',
