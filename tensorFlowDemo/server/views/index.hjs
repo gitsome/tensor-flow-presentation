@@ -65,6 +65,10 @@
         <!-- angular-storage -->
         <script src="lib/angular-storage/angular-storage.js"></script>
 
+        <!-- angular-storage -->
+        <script src="lib/ui-bootstrap-custom-build/ui-bootstrap-custom-0.14.3-fork-modal.js"></script>
+        <script src="lib/ui-bootstrap-custom-build/ui-bootstrap-custom-tpls-0.14.3-fork-modal.js"></script>
+
 
         <!-- APP MODULES -->
 
@@ -79,7 +83,9 @@
             <script src="scripts/modules/MachineLearning/services/StringTransformService.svc.js"></script>
             <script src="scripts/modules/MachineLearning/services/SeededRandom.svc.js"></script>
             <script src="scripts/modules/MachineLearning/services/DataGeneratorService.svc.js"></script>
+            <script src="scripts/modules/MachineLearning/services/ModalService.svc.js"></script>
             <!-- DIRECTIVES -->
+            <script src="scripts/modules/MachineLearning/directives/ml-modal.dir.js"></script>
             <script src="scripts/modules/MachineLearning/directives/ml-main.dir.js"></script>
             <script src="scripts/modules/MachineLearning/directives/ml-schemes.dir.js"></script>
             <script src="scripts/modules/MachineLearning/directives/ml-edit-scheme.dir.js"></script>

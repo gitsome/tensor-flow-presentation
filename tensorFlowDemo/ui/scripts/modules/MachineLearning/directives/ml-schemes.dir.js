@@ -16,12 +16,13 @@
                 '$element',
                 '$timeout',
                 'Moment',
+                'ModalService',
                 'SchemeService',
                 'DataGeneratorService',
                 'LoadingService',
                 'ML_VIEW_MODE',
 
-                function ($scope, $element, $timeout, Moment, SchemeService, DataGeneratorService, LoadingService, ML_VIEW_MODE) {
+                function ($scope, $element, $timeout, Moment, ModalService, SchemeService, DataGeneratorService, LoadingService, ML_VIEW_MODE) {
 
                     /*============ MODEL ============*/
 
@@ -59,6 +60,8 @@
                     /*============ BEHAVIOR ============*/
 
                     $scope.create = function () {
+
+                        ModalService.openCustomModal('Scheme Name', "<h2>hello</h2");
 
                         LoadingService.setIsLoading(true);
 

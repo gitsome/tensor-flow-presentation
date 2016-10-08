@@ -7,6 +7,7 @@ var sessionConfigs = sessionConfigs || {};
 
     angular.module('MachineLearning', [
         'ngResource', 'ngCookies', 'ngSanitize', 'ngAnimate',   // angular modules
+        'ui.bootstrap', // angular-ui bootstrap component modules
         'ui.router',                                            // angular-ui modules
         'ngStorage'                                             // local storage
     ]);
@@ -38,6 +39,23 @@ var sessionConfigs = sessionConfigs || {};
 
 
     /*======================== INITIALIZATION ========================*/
+
+    // override the template/modal/window.html template to add some custom accessibility
+    angular.module('MachineLearning').run(["$templateCache", function ($templateCache) {
+        $templateCache.put("template/modal/window.html", [
+            '<div modal-render="{{$isRendered}}" tabindex="-1"',
+                'role="dialog" class="modal"',
+                'aria-labelledby="{{$parent.modal.labelId}}"',
+                'aria-describedby="{{$parent.modal.contentId}}"',
+                'uib-modal-animation-class="fade"',
+                'modal-in-class="in"',
+                'ng-style="{\'z-index\': 1050 + index*10, display: \'block\'}" ng-click="close($event)">',
+                '<div class="modal-dialog" ng-class="size ? \'modal-\' + size : \'\'">',
+                    '<div class="modal-content" uib-modal-transclude></div>',
+                '</div>',
+            "</div>"
+        ].join(' '));
+    }]);
 
     // initialize the data
     angular.module('MachineLearning').run(function(SchemeService) {
