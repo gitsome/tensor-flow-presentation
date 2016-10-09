@@ -18,7 +18,6 @@ module.exports = function (appAPI) {
     /*==================================== PUBLIC METHODS ====================================*/
 
     MLDataService.save = function (mlData) {
-        console.log("saving:", mlData.length);
         var file = global.appRoot + '/exports/mlData.json';
         jsonfile.writeFileSync(file, mlData);
     };

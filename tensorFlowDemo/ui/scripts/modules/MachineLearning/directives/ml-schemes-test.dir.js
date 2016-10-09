@@ -37,7 +37,7 @@
                     $scope.testComplete = false;
 
                     $scope.maxTries = MAX_QUESTIONS;
-                    $scope.intervalLength = INTERVAL_CORRECT;
+                    $scope.intervalLength;
                     $scope.percentThreshold = INTERVAL_PERCENT_CORRECT;
 
                     $scope.showingInstructions = true;
@@ -57,8 +57,6 @@
                     $scope.answers = [];
 
                     $scope.passed = 'FALSE';
-
-
 
 
                     /*============ MODEL DEPENDENT METHODS ============*/
@@ -81,6 +79,8 @@
                             MAX_QUESTIONS = schemes.length * 100; // I think this should be some type of exponential... would get progressively harder with more
 
                             INTERVAL_CORRECT = schemes.length * 10; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
+
+                            $scope.intervalLength = INTERVAL_CORRECT;
                         });
                     };
 
@@ -247,7 +247,7 @@
 
                     loadSchemes().then(function () {
 
-                        // loadFakeAnswers();
+                        //loadFakeAnswers();
 
                         loadNextQuestion();
                     });

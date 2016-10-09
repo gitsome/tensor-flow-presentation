@@ -51,12 +51,12 @@ module.exports = function(app, routeAPI){
         var schemeName = body.schemeName;
         var schemeTransforms = body.schemeTransforms;
 
-        services.schemes.updateOrCreateScheme(schemeName, schemeTransforms);
+        var updatedScheme = services.schemes.updateOrCreateScheme(schemeName, schemeTransforms);
 
 
         /*============ RESPONSE LOGIC ============*/
 
-        that.success({status: 'success'});
+        that.success(updatedScheme);
     }));
 
 

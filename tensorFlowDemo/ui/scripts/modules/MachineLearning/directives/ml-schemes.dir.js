@@ -61,29 +61,34 @@
 
                     $scope.create = function () {
 
-                        ModalService.openCustomModal('Scheme Name', "<h2>hello</h2");
+                        var modalInstance = ModalService.openCustomModal('Name Your New Scheme', '<ml-name-new-scheme modal="modal"></ml-name-new-scheme>');
 
-                        LoadingService.setIsLoading(true);
+                        modalInstance.result.then(function (schemeName) {
 
-                        var newScheme = {
-                            name: 'sweet',
-                            transforms: []
-                        };
+                            LoadingService.setIsLoading(true);
 
-                        SchemeService.updateOrCreateScheme(newScheme).then(function () {
+                            var newScheme = {
+                                name: schemeName,
+                                transforms: []
+                            };
 
-                            return SchemeService.get().then(function (schemes_in) {
+                            SchemeService.updateOrCreateScheme(newScheme).then(function (serverScheme) {
 
-                                $scope.schemes = schemes_in;
+                                console.log("serverscheme:", serverScheme);
 
-                                $timeout(function () {
-                                    $scope.$emit('ml-schemes.editScheme', newScheme);
-                                    LoadingService.setIsLoading(false);
-                                }, 1000);
+                                return SchemeService.get().then(function (schemes_in) {
+
+                                    $scope.schemes = schemes_in;
+
+                                    $timeout(function () {
+                                        $scope.$emit('ml-schemes.editScheme', serverScheme);
+                                        LoadingService.setIsLoading(false);
+                                    }, 1000);
+                                });
+
+                            }, function () {
+                                LoadingService.setIsLoading(false);
                             });
-
-                        }, function () {
-                            LoadingService.setIsLoading(false);
                         });
                     };
 
@@ -151,7 +156,7 @@
 
                         '<div class="alert alert-info" ng-if="!schemes || !schemes.length"><i class="fa fa-info-circle"></i> <strong>No Schemes Yet!</strong> Try refreshing or create a new scheme.</div>',
 
-                        '<ml-scheme-item class="anim-el-slide-right" ng-repeat="scheme in schemes" scheme="scheme" is-disabled="loading"></ml-scheme-item>',
+                        '<ml-scheme-item class="anim-el-slide-right" ng-repeat="scheme in schemes track by scheme.id" scheme="scheme" is-disabled="loading"></ml-scheme-item>',
 
                         '<div class="ml-schemes-test-container" ng-if="ML_VIEW_MODE === \'edit\'">',
                             '<div class="row">',

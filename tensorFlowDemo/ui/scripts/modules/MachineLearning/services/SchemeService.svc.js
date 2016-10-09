@@ -19,25 +19,13 @@
             var schemes = [];
 
             var updateOrCreateScheme = function (scheme) {
-                return $http.post('/services/schemes', {schemeName: scheme.name, schemeTransforms: scheme.transforms});
+                return $http.post('/services/schemes', {schemeName: scheme.name, schemeTransforms: scheme.transforms}).then(function (results) {
+                    return results.data;
+                });
             };
 
             var deleteScheme = function (scheme) {
-                return $http.delete('/services/schemes', {params: {schemeName: scheme.name}}).then(function () {
-                    var foundIndex = -1;
-
-                    _.each(schemes, function (scheme, i) {
-                        if (scheme.name === scheme.name) {
-                            foundIndex = i;
-                        }
-                    });
-
-                    if (foundIndex !== -1) {
-                        schemes.splice(foundIndex, 1);
-                    }
-
-                    return schemes;
-                });
+                return $http.delete('/services/schemes', {params: {schemeName: scheme.name}});
             };
 
             var saveData = function (mlData) {

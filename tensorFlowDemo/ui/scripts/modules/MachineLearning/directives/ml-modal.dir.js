@@ -48,7 +48,7 @@
 
                     '<div class="modal-header">',
                         '<h3 class="modal-title">',
-                            ' <span translate="{{title}}"></span>',
+                            ' <span>{{title}}</span>',
                         '</h3>',
                     '</div>',
 

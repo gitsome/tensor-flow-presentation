@@ -23,6 +23,10 @@ module.exports = function (appAPI) {
         jsonfile.writeFileSync(file, JSON.stringify(schemes));
     };
 
+    var getSchemeId = function () {
+        return Math.round(Math.random() * 999999999) + '-' + (new Date().getTime());
+    };
+
 
     /*==================================== PUBLIC METHODS ====================================*/
 
@@ -59,20 +63,27 @@ module.exports = function (appAPI) {
 
         if (foundIndex !== -1) {
 
-            schemes[foundIndex] = {
+            schemes[foundIndex].name = schemeName;
+            schemes[foundIndex].transforms = schemeTransforms;
+
+            persistSchemes();
+
+            return schemes[foundIndex];
+
+        } else {
+
+            var newScheme = {
+                id: getSchemeId(),
                 name: schemeName,
                 transforms: schemeTransforms
             };
 
-        } else {
+            schemes.push(newScheme);
 
-            schemes.push({
-                name: schemeName,
-                transforms: schemeTransforms
-            });
+            persistSchemes();
+
+            return newScheme;
         }
-
-        persistSchemes();
     };
 
     SchemesService.deleteScheme = function (schemeName) {
@@ -96,6 +107,7 @@ module.exports = function (appAPI) {
 
         schemes = [
             {
+                id: getSchemeId(),
                 name: 'A',
                 transforms: [
                     {
@@ -133,6 +145,7 @@ module.exports = function (appAPI) {
                 ]
             },
             {
+                id: getSchemeId(),
                 name: 'B',
                 transforms: [
                     {
@@ -171,7 +184,6 @@ module.exports = function (appAPI) {
                         ].join('\n')
                     },
                     {
-                        id: 7,
                         script: "cursor.moveTo(4).set(cursor.getRandomCon());"
                     }
                 ]
