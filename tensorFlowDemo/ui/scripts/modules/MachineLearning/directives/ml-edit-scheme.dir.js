@@ -166,18 +166,42 @@
                                         '<div class="row">',
                                             '<div class="col-xs-12">',
 
-                                                '<pre>cursor.value(); // get the value at the current position</pre>',
-                                                '<pre>cursor.value("B"); // set the value at the current position</pre>',
+'<pre>cursor.set("W"); // set the character to "W" at the current position</pre>',
 
-                                                '<pre>cursor.next(); // move the cursor forward</pre>',
-                                                '<pre>cursor.back(); // move the cursor back</pre>',
-                                                '<pre>cursor.first(); // move the cursor to the beginning</pre>',
-                                                '<pre>cursor.last(); // move the cursor to the end</pre>',
-                                                '<pre>cursor.moveTo(); // move cursor to a particular index</pre>',
+'<pre>cursor.get(); // get the value at the current position</pre>',
 
-                                                '<pre>cursor.find("A", function (cursor, i) {}); // find instances of an individual character</pre>',
-                                                '<pre>cursor.vowels(function (cursor, i) {}); // find all vowels</pre>',
-                                                '<pre>cursor.cons(function (cursor, i) {}); // find all consonants</pre>',
+'<pre>cursor.getCharAt(5); // get the character at the specified index</pre>',
+
+'<pre>cursor.getRandomVowel() // utility: get a random vowel</pre>',
+
+'<pre>cursor.getRandomCon() // utility: get a random consonant</pre>',
+
+'<pre>cursor.next(); // move the cursor forward</pre>',
+'<pre>cursor.back(); // move the cursor back</pre>',
+'<pre>cursor.first(); // move the cursor to the beginning</pre>',
+'<pre>cursor.last(); // move the cursor to the end</pre>',
+'<pre>cursor.moveTo(); // move cursor to a particular index</pre>',
+
+'<pre>// for each "P", make sure an "S" follows\n',
+'cursor.forEach("P", function (c, i) {\n',
+'    c.next().set("S");\n',
+'});',
+'</pre>',
+
+'<pre>// for each vowel, if it occurs after the middle replace it with a random consonant\n',
+'cursor.forEachVowel(function (c, i) {\n',
+'    if (i > 4) {\n',
+'        c.next().set(c.getRandomCon());\n',
+'    }\n',
+'});',
+'</pre>',
+'<pre>// for each consonant (con), if it is not a member of "JOHN", then\n',
+'cursor.forEachCon(function (c, i) {\n',
+'    if ("JOHN".indexOf(c.get()) === -1) {\n',
+'        c.set(c.getRandomVowel());\n',
+'    }\n',
+'});',
+'</pre>',
 
                                             '</div>',
                                         '</div>',
