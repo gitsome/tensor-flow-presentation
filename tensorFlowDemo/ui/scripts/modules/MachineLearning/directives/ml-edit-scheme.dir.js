@@ -42,7 +42,7 @@
 
                         var foundIndex = -1;
                         _.each($scope.scheme.transforms, function (transform, i) {
-                            if (transform.id === transformToDelete.id) {
+                            if (transform === transformToDelete) {
                                 foundIndex = i;
                             }
                         });
