@@ -16,7 +16,9 @@
 
             /*============ PRIVATE METHODS AND VARIABLES ============*/
 
-            var DATA_POINTS_PER_SCHEME = 60;
+            // should be set to the average number of questions it took a human to do for comparison
+            // (NOTE) multiply by 2 so half can be used for testing
+            var DATA_POINTS_PER_SCHEME = 10 * 2;
 
             var fillArray = function (len, val) {
                 var rv = new Array(len);
@@ -61,6 +63,13 @@
 
                 var totalDataPoints = getTotalDataPoints(schemes);
 
+                var labelIndexToLabelMap = {};
+                var labelToLableIndexMap = {};
+                _.each(schemes, function (scheme, i) {
+                    labelIndexToLabelMap[i] = scheme.name;
+                    labelToLableIndexMap[scheme.name] = i;
+                });
+
                 var mlData = [];
 
                 var thisScheme;
@@ -74,13 +83,11 @@
                     mlData.push({
                         value: randomString,
                         oneHotValue: charsToOneHot(randomString),
-                        label: thisScheme.name
+                        label: labelToLableIndexMap[thisScheme.name]
                     });
                 }
 
-                console.log("mlData:", schemes.length, mlData);
-
-                return mlData;
+                return {labelMap: labelIndexToLabelMap, data: mlData};
             };
 
 
