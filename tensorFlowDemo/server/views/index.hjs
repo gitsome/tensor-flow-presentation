@@ -9,8 +9,6 @@
         <meta name="description" content="" />
         <meta name="keywords" content="" />
 
-        <base href="http://localhost:3003/" />
-
         <!-- SESSION CONFIG DATA -->
         <script>
             // load the server side configs (just to make sure nodetypes get it)
