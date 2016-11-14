@@ -44,8 +44,8 @@ body {
 .reveal h5,
 .reveal h6 {
   margin: 0 0 20px 0;
-  color: #333;
-  font-family: font-family: 'Roboto', sans-serif;
+  color: #384f51;
+  font-family: 'Roboto', sans-serif;
   font-weight: normal;
   letter-spacing: normal;
   text-shadow: none;
@@ -127,11 +127,9 @@ body {
 .reveal blockquote {
   display: block;
   position: relative;
-  width: 70%;
   margin: 20px auto;
   padding: 5px;
   font-style: italic;
-  opacity: 0.8;
 }
 
 .reveal blockquote p:first-child,
@@ -202,11 +200,16 @@ body {
 .reveal small * {
 }
 
+.reveal .blockquote-list blockquote {
+    padding: 0px !important;
+    text-align: center;
+}
+
 /*********************************************
  * LINKS
  *********************************************/
 .reveal a {
-  color: #8b743d;
+  color: #b9754c;
   text-decoration: none;
   -webkit-transition: color 0.15s ease;
   -moz-transition: color 0.15s ease;
@@ -241,7 +244,7 @@ body {
 
 .reveal a:hover img {
   background: rgba(255, 255, 255, 0.2);
-  border-color: #8b743d;
+  border-color: #b9754c;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }
 
 /*********************************************
@@ -249,19 +252,19 @@ body {
  *********************************************/
 .reveal .controls .navigate-left,
 .reveal .controls .navigate-left.enabled {
-  border-right-color: #8b743d; }
+  border-right-color: #b9754c; }
 
 .reveal .controls .navigate-right,
 .reveal .controls .navigate-right.enabled {
-  border-left-color: #8b743d; }
+  border-left-color: #b9754c; }
 
 .reveal .controls .navigate-up,
 .reveal .controls .navigate-up.enabled {
-  border-bottom-color: #8b743d; }
+  border-bottom-color: #b9754c; }
 
 .reveal .controls .navigate-down,
 .reveal .controls .navigate-down.enabled {
-  border-top-color: #8b743d; }
+  border-top-color: #b9754c; }
 
 .reveal .controls .navigate-left.enabled:hover {
   border-right-color: #c0a86e; }

@@ -23,7 +23,7 @@
 
         <link rel="stylesheet" href="lib/font-awesome-4.5.0/css/font-awesome.min.css">
 
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Audiowide" rel="stylesheet">
 
         <!-- Printing and PDF exports -->
         <script>
@@ -57,24 +57,26 @@
                         <p class="make-pop">
                             Created by <a href="https://github.com/gitsome" target="_blank">John Martin</a> / <a target="_blank" href="https://github.com/gitsome">@gitsome</a>
                         </p>
-
                     </section>
 
                     <section>
-                        <h2>Goal</h2>
-                        <p>
-                            To help build an intuition about how neural networks work and what types of problems it can solve in today's world and why it could be very relevant for us.
-                        </p>
+                        <h2>Goals</h2>
+                        <ul>
+                            <li>Build intuition about how neural networks work and the problems they solve</li>
+                            <li>Explore relevancy of machine learning in education</li>
+                            <li>Get exposed to the basics around TensorFlow</li>
+                        </ul>
                     </section>
 
                     <section data-background="">
-                        <h2>What's Covered?</h2>
+                        <h2>Today's Agenda</h2>
                         <ul>
-                            <li>Machine Learning Overview</li>
+                            <li>Machine Learning Terminology</li>
                             <li>Applications of ML</li>
-                            <li>Building Intuition</li>
-                            <li>Deep Learning Overview</li>
-                            <li>Technology</li>
+                            <li>Human Experimentation</li>
+                            <li>Neural Networks Orientation</li>
+                            <li>Deep Learning</li>
+                            <li>ML Technology</li>
                             <li>TensorFlow Demo</li>
                             <li>Future of Machine Learning</li>
                         </ul>
@@ -91,7 +93,7 @@
                     <section>
                         <h2>First, some Jargon</h2>
                         <ul>
-                            <li><strong>Artificial Intelligence:</strong> Machine mimics "cognitive" functions that humans associate with other human minds, such as "learning" and "problem solving".</li>
+                            <li><strong>Artificial Intelligence:</strong> Machine mimics "cognitive" functions that humans associate with other human minds, such as "learning" and "problem solving"</li>
                             <li><strong>Machine Learing:</strong> General process of dynamically modifying algorithm/function</li>
                             <li><strong>Neural Network:</strong> A type of machine learning using simulated connected "neurons"</li>
                             <li><strong>Deep Learning:</strong> A type of Neural Network that utilizes multiple hidden layers</li>
@@ -120,26 +122,48 @@
                 <section>
 
                     <section data-background="images/machine.jpg">
-                        <h2 class="make-pop">Applications</h2>
+                        <h2 class="make-pop">Why Discuss Machine Learning?</h2>
                     </section>
 
                     <section>
-                        <h2 class="make-pop">Why is it Relevant?</h2>
+                        <h2>Machine Learning Headlines 1</h2>
+                        <div class="blockquote-list">
+                            <blockquote><a href="http://blogs.wsj.com/chinarealtime/2016/10/14/its-electric-chinese-tech-titans-reach-for-the-same-historic-analogy/" target="_blank">“AI is the new electricity”</a></blockquote>
+                            <blockquote><a href="https://research.googleblog.com/2016/09/a-neural-network-for-machine.html" target="_blank">9/27/2016 - “Google Reduces Translation Erro by 50% Using Neural Nets”</a></blockquote>
+
+                            <blockquote>
+                                <a href="http://singularityhub.com/2016/10/04/a-computer-can-now-translate-languages-as-well-as-a-human/?utm_content=buffer07ed6&utm_medium=social&utm_source=twitter-hub&utm_campaign=buffer" target="_blank">
+                                    10/4/2016 - “A Computer Can Now Translate Languages as Well as a Human”
+                                </a>
+                            </blockquote>
+
+                            <blockquote>
+                                <a href="http://www.cnbc.com/2016/10/08/in-quest-for-better-ai-tech-companies-gobble-up-smaller-companies-study.html" target="_blank">10/8/2016 - “U.S. tech behemoths like Alphabet's Google and iPhone maker Apple have been quietly snapping up dozens of artificial intelligence companies over the last five years”</a>
+                            </blockquote>
+
+                            <blockquote><a href="http://www.mckinsey.com/business-functions/digital-mckinsey/our-insights/where-machines-could-replace-humans-and-where-they-cant-yet" target="_blank">“Where machines could replace humans—and where they can’t (yet)”</a></blockquote>
+                            <blockquote><a href="http://blogs.wsj.com/chinarealtime/2016/10/14/its-electric-chinese-tech-titans-reach-for-the-same-historic-analogy/" target="_blank">“AI is the new electricity”</a></blockquote>
+                        </div>
                     </section>
 
                     <section>
-                        <h2 class="make-pop">Machine Learning Headlines</h2>
-                        <ul>
-                            <li>It's totally awesome sauce cakes</li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                        </ul>
+                        <h2>Machine Learning Headlines 2</h2>
+                        <div class="blockquote-list">
+                            <blockquote><a href="http://singularityhub.com/2016/01/18/digital-diagnosis-intelligent-machines-do-a-better-job-than-humans/?utm_content=buffer09f85&utm_medium=social&utm_source=twitter-hub&utm_campaign=buffer" target="_blank">1/18/2016 - “Digital Diagnosis: Intelligent Machines Do a Better Job Than Humans”</a></blockquote>
+                            <blockquote><a href="http://singularityhub.com/2016/10/13/well-soon-trust-ai-more-than-doctors-to-diagnose-disease/" target="_blank">10/13/2016 - “We’ll Soon Trust AI More Than Doctors to Diagnose Disease”</a></blockquote>
+                            <blockquote><a href="http://theweek.com/speedreads/654463/google-more-than-1000-artificial-intelligence-projects-works" target="_blank">10/18/2016 - “Google has more than 1,000 artificial intelligence projects in the works”</a></blockquote>
+                            <blockquote><a href="https://techcrunch.com/2016/10/17/apple-hires-cmu-professor-as-director-of-ai-research-to-smarten-up-siri/" target="_blank">10/27/2016 - “Apple hires CMU professor as director of AI research to smarten up Siri”</a></blockquote>
+
+                        </div>
                     </section>
 
+
+
+
+                    <section data-background="images/andrew_hilary.jpg"></section>
                     <section data-background="images/andrew_hilary.jpg">
                         <blockquote class="make-pop">
+                            <span class="shape"></span>
                             If a typical person can do a mental task with less than one second of thought, we can probably automate it using AI either now or in the near future.
                             <div class="author">-- Andrew Ng</div>
                         </blockquote>
@@ -148,30 +172,57 @@
                         </ul>
                     </section>
 
+                    <section data-background="images/obama.jpg"></section>
                     <section data-background="images/obama.jpg">
                         <blockquote class="make-pop">
                             ...we really have to think through the economic implications. Because most people aren’t spending a lot of time right now worrying about singularity—they are worrying about “Well, is my job going to be replaced by a machine?”
-                            <div class="author">-- Joi Ito interviews Obama</div>
+                            <div class="author">-- President Obama</div>
                         </blockquote>
                         <ul class="citations make-pop">
                             <li>https://www.wired.com/2016/10/president-obama-mit-joi-ito-interview/</li>
                         </ul>
                     </section>
 
+                    <section>
+                        <h2>Relevancy in Education?</h2>
+                    </section>
+
                 </section>
+
 
                 <section>
 
                     <section data-background="images/machine.jpg">
-                        <h2 class="make-pop">Building Intuition</h2>
+                        <h2 class="make-pop">Neural Networks Orientation</h2>
+                    </section>
+
+                    <section>
+                        <h2>What is a Neural Network?</h2>
+                    </section>
+
+                    <section>
+                        <h2>How does it work?</h2>
+                        <ul>
+                            <li>Weights & Biases</li>
+                            <li>Activation Function</li>
+                            <li>Back Propagation</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Why does it work?</h2>
+                        <ul>
+                            <li>Physics Reasons</li>
+                            <li>Non-Linearity</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Different Types of Neural Nets</h2>
                     </section>
 
                     <section>
                         <h2>Online Neural Net Demo</h2>
-                    </section>
-
-                    <section>
-                        <h2>Human Experiment</h2>
                     </section>
 
                 </section>
@@ -322,13 +373,150 @@ Error: [('/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/py
                         <p>Training Neural Networks</p>
                         <p>De-Convolutionary Neural Nets</p>
                         <p>Re-use of lower layers</p>
+                        <p>Latest and Future Applications</p>
                     </section>
 
                     <section>
-                        <p></p>
+                        <ul>
+                            <li><a href="http://www.computerworld.com/article/3123158/computer-hardware/ibm-shows-how-fast-its-brain-like-chip-can-learn.html" target="_blank">IBM's Brain Like Chips</a></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Latest and Future Applications</h2>
+                        <ul>
+                            <li><a href="http://www.theverge.com/2016/11/10/13582700/google-soli-radarcat-object-recognition" target="_blank">Google’s miniature radars can now identify objects</a></li>
+                            <li><a href="http://tinyclouds.org/colorize/" target="_blank">Automatic Colorization</a></li>
+                        </ul>
                     </section>
 
                 </section>
+
+                <section>
+
+                    <section data-background="images/machine.jpg">
+                        <h2 class="make-pop">Resources</h2>
+                    </section>
+
+                    <section>
+                        <ul>
+                            <h2>Machine Learning Basics 1</h2>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=b99UVkWzYTQ&list=PLjJh1vlSEYgvGod9wWiydumYl8hOXixNu" target="_blank">Deep Learning Video Tour</a></li>
+                            <li><a href="http://www.asimovinstitute.org/neural-network-zoo/?utm_content=37815508&utm_medium=social&utm_source=twitter/" target="_blank">High Level Neural Network Diagrams</a></li>
+                            <li><a href="http://stackoverflow.com/questions/9782071/why-must-a-nonlinear-activation-function-be-used-in-a-backpropagation-neural-net" target="_blank">Stack Overflow: Why Non-Linearity</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=uGdpGFQu33g" target="_blank">Logistic Regression</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=QSaZGT4-6EY" target="_blank">Google's Jeff Dean Talk: "Large Scale Deep Learning for Intelligent Comp Systems</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=3dXQxSI3XDY" target="_blank">Machine learning is not the future - Google I/O 2016</a></li>
+                            <li><a href="http://blog.deepgram.com/how-to-get-a-job-in-deep-learning/" target="_blank">Full Time ML Peeps</a></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <ul>
+                            <h2>Machine Learning Basics 2</h2>
+                            <li><a href="https://onionesquereality.wordpress.com/2016/05/18/where-does-the-sigmoid-in-logistic-regression-come-from/" target="_blank">Where does the Sigmoid in Logistic Regression come from?</a></li>
+                            <li><a href="http://www.theverge.com/a/luka-artificial-intelligence-memorial-roman-mazurenko-bot" target="_blank">When her best friend died, she rebuilt him using artificial intelligence</a></li>
+                            <li><a href="http://www.theatlantic.com/technology/archive/2016/08/can-satellites-learn-to-see-poverty/497153/?platform=hootsuite" target="_blank">Can Satellites Learn to 'See' Poverty?</a></li>
+                            <li><a href="http://www.techrepublic.com/article/why-ai-and-machine-learning-are-so-hard-facebook-and-google-weigh-in/" target="_blank">Why AI and machine learning are so hard, Facebook and Google weigh in</a></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <ul>
+                            <h2>High Level Article Binge</h2>
+                            <li><a href="https://backchannel.com/an-exclusive-look-at-how-ai-and-machine-learning-work-at-apple-8dbfb131932b#.lv85j3u56" target="_blank">AI, Machine Learning @ Apple</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=5MdSE-N0bxs" target="_blank">Physics and Machine Learning!</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <ul>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Crazy Demos</h2>
+                        <ul>
+                            <li><a href="https://clarifai.com/#demo" target="_blank">Test Clarifai Image Recognition</a></li>
+                            <li><a href="http://www.digitaltrends.com/photography/neural-photo-editor/" target="_blank">Neural Net Powered Photoshop Touchups</a></li>
+                            <li><a href="https://github.com/alexjc/neural-doodle" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">ML Doodles</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Classes</h2>
+                        <ul>
+                            <li><a href="https://www.udacity.com/course/machine-learning-engineer-nanodegree--nd009" target="_blank">Udacity: Machine Learning Engineer</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                            <li><a href="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" target="_blank">Visual Introduction to ML</a></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Technical: General Articles</h2>
+                        <ul>
+                            <li><a href="https://research.googleblog.com/2016/08/text-summarization-with-tensorflow.html9" target="_blank">TensorFlow: Text Summarization</a></li>
+                            <li><a href="http://distill.pub/2016/augmented-rnns/" target="_blank">Augmented Reurrent Neural Networks</a></li>
+                            <li><a href="http://learningtensorflow.com/lesson2/" target="_blank">TensorFlow: Tutorial</a></li>
+                            <li><a href="http://datascience.stackexchange.com/questions/10015/implement-mlp-in-tensorflow" target="_blank">TensorFlow: Multinomial Regression</a></li>
+                            <li><a href="https://en.wikipedia.org/wiki/Stone%E2%80%93Weierstrass_theorem" target="_blank">Stone–Weierstrass theorem (Why does Deep Learning Solve Problems)</a></li>
+                            <li><a href="http://stackoverflow.com/questions/34229140/choosing-from-different-cost-function-and-activation-function-of-a-neural-networ">Choosing from different cost function and activation function of a neural network</a></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Technical: Convolution Nets</h2>
+                        <ul>
+                            <li><a href="https://brohrer.github.io/how_convolutional_neural_networks_work.html" target="_blank">Convolution Nets Article & Video</a></li>
+                            <li><a href="http://cs231n.github.io/neural-networks-1/" target="_blank">CS231n Convolutional Neural Networks for Visual Recognition</a></li>
+                            <li><a href="https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/" target="_blank">An Intuitive Explanation of Convolutional Neural Networks</a></li>
+                            <li><a href="http://www.kdnuggets.com/2016/09/beginners-guide-understanding-convolutional-neural-networks-part-1.html" target="_blank">A Beginner’s Guide To Understanding Convolutional Neural Networks Part 1</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=AgkfIQ4IGaM" target="_blank">Deep Visualization Toolbox</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=ghEmQSxT6tw" target="_blank">Visualizing and Understanding Deep Neural Networks by Matt Zeiler</a></li>
+                        </ul>
+                    </section>
+
+                    <section>
+
+                        <h2>Counter Arguments</h2>
+                        <ul>
+                            <li><a href="http://www.theverge.com/2016/10/10/13224930/ai-deep-learning-limitations-drawbacks" target="_blank">These are three of the biggest problems facing today's AI</a></li>
+
+                        </ul>
+
+                    </section>
+
+
+
+
+
+
+                    <section data-background="images/golf_clap.gif">
+                        <h1 class="make-pop make-pop-clear">THE END</h1>
+                    </section>
+
+                </section>
+
+
+
+
 
             </div>
 

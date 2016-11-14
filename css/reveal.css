@@ -33,7 +33,7 @@
 }
 
 .reveal strong {
-    color: #CBB98E;
+    color: #b9754c;
 }
 
 code.hljs {
@@ -59,10 +59,18 @@ code.hljs {
 
 .make-pop {
     display: inline-block;
-    padding: 10px 75px !important;
+    padding: 45px 72px !important;
     background: rgba(255,255,255, 0.96);
     border-radius: 25px;
     box-shadow: 0px 0px 15px rgba(0,0,0, 0.5);
+}
+
+.make-pop.make-pop-clear {
+    background: rgba(255,255,255, 0.1);
+}
+
+.reveal h1.make-pop, .reveal h2.make-pop, .reveal h3.make-pop, .reveal h4.make-pop {
+    border-top-left-radius: 100px;
 }
 
 .reveal h1 {
@@ -83,6 +91,7 @@ code.hljs {
     list-style: none;
     margin:0;
     padding: 0;
+    opacity: 0.75;
 }
 .reveal .citations li {
     list-style: none;
@@ -90,13 +99,16 @@ code.hljs {
     padding: 0;
 }
 .reveal blockquote {
+    border-top-left-radius: 200px;
     font-size: 80% !important;
-    padding: 25px !important;
+    padding: 50px 100px 25px 150px !important;
+    text-align: left;
+    shape-outside: circle(50%);
 }
 blockquote .author {
     text-align: right;
     font-size: 60%;
-    color: #CBB98E;
+    color: #b9754c;
 }
 
 html, body, .reveal div, .reveal span, .reveal applet, .reveal object, .reveal iframe,
