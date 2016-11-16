@@ -36,6 +36,10 @@
     color: #b9754c;
 }
 
+.reveal li strong {
+    margin-right: 10px;
+}
+
 code.hljs {
     background: #f7f2d3;
     background: -moz-radial-gradient(center, circle cover, white 0%, #f7f2d3 100%);
@@ -67,6 +71,7 @@ code.hljs {
 
 .make-pop.make-pop-clear {
     background: rgba(255,255,255, 0.1);
+    color: #FFF;
 }
 
 .reveal h1.make-pop, .reveal h2.make-pop, .reveal h3.make-pop, .reveal h4.make-pop {
@@ -286,7 +291,7 @@ html:-moz-full-screen-ancestor {
 .reveal .controls button {
   padding: 0;
   position: absolute;
-  opacity: 0.05;
+  opacity: 0.2;
   width: 0;
   height: 0;
   background-color: transparent;

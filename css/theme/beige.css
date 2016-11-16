@@ -202,8 +202,31 @@ body {
 
 .reveal .blockquote-list blockquote {
     padding: 0px !important;
+    text-align: left;
+    font-style: normal;
+}
+
+.reveal blockquote.blockquote-with-date {
+    position: relative;
+    padding-left: 3.5em !important;
+}
+
+.reveal blockquote.blockquote-with-date .date {
+    position: absolute;
+    top:0;
+    left: 0;
+    font-size: 55%;
+    padding-top: 0.55em;
+}
+
+attribute {
+    display: block;
+    font-size: 50%;
+    opacity: 0.5;
+    margin-top: 30px;
     text-align: center;
 }
+
 
 /*********************************************
  * LINKS
@@ -231,7 +254,9 @@ body {
   margin: 15px 0px;
   background: rgba(255, 255, 255, 0.12);
   border: 4px solid #333;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  padding: 15px;
+}
 
 .reveal section img.plain {
   border: 0;
