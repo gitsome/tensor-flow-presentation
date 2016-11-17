@@ -3,11 +3,37 @@ module.exports = function(app, routeAPI){
     /*============ DEPENDENCIES ============*/
 
     var RequestHandler = require('../classes/RequestHandler.cls.js')();
+    var jsonfile = require('jsonfile');
 
 
     /*============ PRIVATE VARIABLES/METHODS ============*/
 
     var services = routeAPI.services;
+
+
+    /*==================================== SET MODE ====================================*/
+
+    app.get("/services/mode/edit", RequestHandler(function (req, res) {
+
+        var that = this;
+
+        /*============ RESPONSE LOGIC ============*/
+
+        services.mode.set('edit');
+
+        that.success({status: 'success'});
+    }));
+
+    app.get("/services/mode/view", RequestHandler(function (req, res) {
+
+        var that = this;
+
+        /*============ RESPONSE LOGIC ============*/
+
+        services.mode.set('view');
+
+        that.success({status: 'success'});
+    }));
 
 
     /*==================================== SET DEFAULT SCHEMES ====================================*/
@@ -99,6 +125,28 @@ module.exports = function(app, routeAPI){
         /*============ RESPONSE LOGIC ============*/
 
         that.success({status: 'success'});
+    }));
+
+    /*==================================== GET ML DATA ====================================*/
+
+    app.get("/services/getdata", RequestHandler(function (req, res) {
+
+        var that = this;
+
+        /*============ GATHER PARAMS ============*/
+
+        var file = global.appRoot + '/exports/mlData.json';
+
+        /*============ RESPONSE LOGIC ============*/
+
+        try {
+            var mlData = jsonfile.readFileSync(file);
+            that.success(mlData);
+        } catch (e) {
+            console.log("error getting data", e);
+            that.fail("error getting data");
+        }
+
     }));
 
 };
