@@ -92,7 +92,9 @@ body {
 .reveal ul {
   display: inline-block;
   text-align: left;
-  margin: 0 0 0 1em; }
+  margin: 0 0 0 1em;
+  font-size: 85%;
+}
 
 .reveal ol {
   list-style-type: decimal; }
@@ -223,8 +225,11 @@ attribute {
     display: block;
     font-size: 50%;
     opacity: 0.5;
-    margin-top: 30px;
     text-align: center;
+    margin-bottom: 5px;
+}
+attribute:first-child {
+    margin-top: 30px;
 }
 
 
@@ -255,7 +260,7 @@ attribute {
   background: rgba(255, 255, 255, 0.12);
   border: 4px solid #333;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-  padding: 15px;
+  padding: 20px;
 }
 
 .reveal section img.plain {

@@ -26,7 +26,7 @@
 
 
 .reveal ul li, .reveal ol li {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.40em;
 }
 .reveal ul li:last-child, .reveal ol li:last-child {
     margin-bottom: 0;
@@ -105,7 +105,7 @@ code.hljs {
 }
 .reveal blockquote {
     border-top-left-radius: 200px;
-    font-size: 80% !important;
+    font-size: 70% !important;
     padding: 50px 100px 25px 150px !important;
     text-align: left;
     shape-outside: circle(50%);
