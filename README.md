@@ -8,8 +8,6 @@ tensorboard --logdir=logs
 node app
 
 # Run Machine Learning
-python multinomial_regression.py
-- or -
 python hidden_layer.py
 - or -
 python hidden_layer_two.py
