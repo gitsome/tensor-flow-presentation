@@ -197,6 +197,7 @@
                     <section>
                         <h2>EX (Input: Images)</h2>
                         <ul>
+                            <li>Text Detection / Handwriting (cash checks via photo)</li>
                             <li><a href="https://www.quora.com/What-kind-of-machine-learning-algorithms-do-the-driverless-cars-use" target="_blank">Autonomous Driving</a></li>
                             <li><a href="http://www.theverge.com/2016/8/4/12369494/descartes-artificial-intelligence-crop-predictions-usda" target="_blank">Satelite Data used to Outpredict USDA'S Corn Yield Estimates</a></li>
                             <li><a href="https://www.youtube.com/watch?v=DafZSeIGLNE" target="_blank">Combining satellite imagery and machine learning to predict poverty</a></li>
@@ -226,6 +227,20 @@
 
                 </section>
 
+
+                <section>
+
+                    <section data-background="images/machine.jpg">
+                        <h2 class="make-pop">Human Expermient</h2>
+                    </section>
+
+                    <section >
+                        <img src="images/human_graph.jpg" style="width:75%;"/>
+                    </section>
+
+                </section>
+
+
                 <section>
 
                     <section data-background="images/machine.jpg">
@@ -233,7 +248,7 @@
                     </section>
 
                     <section>
-                        <h2>Why Even Try Neural Networks?</h2>
+                        <h2>Motivation for Neural Networks?</h2>
                         <ul>
                             <li>Pattern recognition is a powerful tool</li>
                             <li>Biological brains are exceptional at pattern recongition and learning</li>
@@ -299,6 +314,39 @@
                     <section>
                         <p>Now we can use some linear algebra and activation functions to process inputs to produce outputs!</p>
                         <img src="images/neural_net.png"/>
+                        <p>Wait? What would the inputs be anyway?</p>
+                    </section>
+
+                    <section>
+                        <h2>Neural Net Inputs</h2>
+                        <ul>
+                            <li class="fragment">Single dimension vector/tensor</li>
+                            <li class="fragment">Each neuron gets one feature (decompose meaningful features)</li>
+                            <li class="fragment">Black and White Image?</li>
+                            <li class="fragment">Grayscale Image?</li>
+                            <li class="fragment">Color Image?</li>
+                            <li class="fragment">House Features?</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <p>Now we know what the inputs should look like!</p>
+                        <img src="images/neural_net.png"/>
+                        <p>What do the outputs look like?</p>
+                    </section>
+
+                    <section>
+                        <h2>Neural Net Outputs</h2>
+                        <ul>
+                            <li class="fragment">Classification (Softmax), probability of a particular class</li>
+                            <li class="fragment">Regression, numeric value</li>
+                            <li class="fragment">Unsupervised, the network itself (Self Organizing Map)</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <p>Now we know what the outputs should look like!</p>
+                        <img src="images/neural_net.png"/>
                         <p>How do we get the right weights and biases / thresholds?</p>
                     </section>
 
@@ -318,7 +366,7 @@
                         <h3>Biological Neural Net Training</h3>
                         <ul>
                             <li>Multiple Dynamic Sensory Inputs</li>
-                            <li>Dynamic Brain Chemistry / Hormones / Toxins</li>
+                            <li>Dynamic Brain Chemistry / Neuro Transmitters / Hormones</li>
                             <li>Plasticity</li>
                             <li>Sleep Cycles / Memory Consolidation / Pruning / Sync</li>
                         </ul>
@@ -346,7 +394,8 @@
                     </section>
 
                     <section>
-                        <h3>Enter Gradient Descent</h3>
+
+                        <h3>Enter Stochastic Gradient Descent (Not Batch)</h3>
 
                         <ul>
                             <li>Allows multi-dimensional cost/error minimization</li>
@@ -354,7 +403,9 @@
                             <li>Propagates error corrections through the network</li>
                             <li>REQUIRES a differentiable activation function</li>
                             <li>Learning Rate CRUCIAL for convergence</li>
-                            <li>Stochastic Gradient Descent (SGD) helps avoid fixating on local minimums</li>
+                            <li><a href="https://www.youtube.com/watch?v=UfNU3Vhv5CA" target="_blank">Stochastic Gradient Descent</a> (SGD) makes large training sets scalable and helps avoid fixating on local minimums</li>
+                            <li><a href="http://stats.stackexchange.com/questions/164876/tradeoff-batch-size-vs-number-of-iterations-to-train-a-neural-network" target="_blank">Mini Batch</a> training can be used for large neural nets</li>
+                            <li>Techniques like adding momentum can help reach global min...</li>
                         </ul>
 
                         <div>
@@ -364,6 +415,7 @@
                     </section>
 
                     <section>
+
                         <h3>Gradient Descent Explained (see links)</h3>
                         <img src="images/gradient_descent.png"/>
 
@@ -378,10 +430,35 @@
                         <h3>Summary of Learning Process (Supervised)</h3>
                         <ol>
                             <li>"Random" weights and biases/thresholds generated</li>
-                            <li>Input values applied -> creates output</li>
+                            <li>Input values applied -> creates output (don't forget to randomize)</li>
                             <li>Cost function calculates error from output vs expected output</li>
-                            <li>Backpropagation (gradient descent) updates biases/thresholds (repeat 2 - 4 until cost function converges)</li>
+                            <li>Backpropagation (stochastic gradient descent) updates biases/thresholds (repeat 2 - 4 until cost converges)</li>
                         </ol>
+                    </section>
+
+                    <section>
+                        <h3>Did it work?</h3>
+                        <ul>
+                            <li>You can report your accuracy against your training data</li>
+                            <li>You can report out convergence of cost function</li>
+                            <li>You MUST run additional TEST data through to verify a good general fit</li>
+                            <li>When gathering data, remember you will need some for training, some for verifying</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h3>Did it not work?</h3>
+                        <h4>Things you can adjust</h4>
+                        <ul>
+                            <li>Training Data Ammount</li>
+                            <li>Training Data Repeats (epoch)</li>
+                            <li>Address possible overfitting (dropout)</li>
+                            <li>Less random initial weights and biases</li>
+                            <li>Different activation function</li>
+                            <li>Switch batch size</li>
+                            <li>Modify structure of your net</li>
+                            <li>Your self esteem</li>
+                        </ul>
                     </section>
 
                     <section>
@@ -410,12 +487,18 @@
                     </section>
 
                     <section>
-                        <h2>Why Deep Learning Works Well?</h2>
+
+                        <h2>Why DL Works? (Expressibility)</h2>
                         <ul>
-                            <li>Single peceptron layer proven to be limited to linear classification</li>
-                            <li>Introducing multi-layer differentiable non-linearity  allows for (via activation function) X-OR functionality and fullfillment of <a href="https://en.wikipedia.org/wiki/Stone%E2%80%93Weierstrass_theorem" target="_blank">Stone–Weierstrass theorem</a> in a NN</li>
-                            <li>Even Linearly Collapsable Models can be More Efficient in Deeper Representations</li>
-                            <li>Phase Space is significantly reduced by our <a href="https://books.google.com/books?id=LEfoCAAAQBAJ&pg=PA49&lpg=PA49&dq=low+entropy+phase+space+earth&source=bl&ots=jHRrLV3kIL&sig=dENhYKtdpqvdMGmW4Hf5NG5mBe8&hl=en&sa=X&ved=0ahUKEwjx6Mar767QAhVklFQKHVTMB34Q6AEIGzAA#v=onepage&q=low%20entropy%20phase%20space%20earth&f=false" target="_blank">low entropy</a> world</li>
+
+                            <li class="fragment">Single perceptron layer proven to be limited to linear classification</li>
+                            <li class="fragment">What class of functions can a neural net express?
+                                <ul>
+                                    <li class="fragment">Composable non-linear layers can approximate any polynomial</li>
+                                    <li class="fragment"><a href="https://en.wikipedia.org/wiki/Stone%E2%80%93Weierstrass_theorem" target="_blank">Stone–Weierstrass theorem</a></li>
+                                    <li class="fragment">Gives us all continuous functions on a closed interval for free!</li>
+                                </ul>
+                            </li>
                         </ul>
 
                         <div>
@@ -425,6 +508,23 @@
                     </section>
 
                     <section>
+
+                        <h2>Why DL Works? (Efficiency)</h2>
+                        <ul>
+                            <li class="fragment">Phase Space is significantly reduced by our low entropy world</li>
+                            <li class="fragment">How many possible images in a 1000x1000 black and white image?</li>
+                            <li class="fragment">2^1,000,000</li>
+                            <li class="fragment">Particles in our Universe?</li>
+                            <li class="fragment">10^89</li>
+                            <li class="fragment">Linearly Collapsable Models can be More Efficient in Deeper Representations</li>
+                            <li class="fragment">Many complex systems are modeled using low degree polynomials</li>
+                            <li class="fragment">Homework: <a href="https://www.youtube.com/watch?v=5MdSE-N0bxs">Watch Max Tegmark</a></li>
+                        </ul>
+
+                    </section>
+
+                    <section>
+
                         <h2>Common Types of Neural Nets</h2>
                         <ul>
                             <li>Feedforward neural network (this presentation)</li>
@@ -436,6 +536,43 @@
                         <div>
                             <attribute>https://en.wikipedia.org/wiki/Types_of_artificial_neural_networks</attribute>
                         </div>
+                    </section>
+
+                    <section>
+
+                        <h2>Neural Net Layer Structures</h2>
+                        <ul>
+                            <li>Fully Connected Layers</li>
+                            <li>Output normalization layers (Softmax)</li>
+                            <li>Dimensionality Reduction Layers (pooling)</li>
+                            <li>Convoluational Layers</li>
+                        </ul>
+                    </section>
+
+                    <section>
+
+                        <h2>Convoluational Layers</h2>
+                        <ul>
+                            <li>When locality matters</li>
+                            <li>Used for feature extraction</li>
+                            <li>Can be used multiple times for higher level patterns</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Convoluational Layers</h2>
+                        <img src="images/feature_extraction.png"/>
+                    </section>
+
+                    <section>
+                        <h2>Convoluational Layers</h2>
+                        <img src="images/convo_vis.jpeg"/>
+                    </section>
+
+                    <section>
+                        <h2>Convoluational Layers</h2>
+                        <p><a href="https://www.youtube.com/watch?v=AgkfIQ4IGaM" target="_blank">Deep Visualization Toolbox Video</a></p>
+                        <p><a href="https://www.youtube.com/watch?v=ghEmQSxT6tw" target="_blank">Visualizing Deep Neural Networks Video</a></p>
                     </section>
 
                 </section>
@@ -468,23 +605,29 @@
                         <h2>Hardware & Linear Algebra</h2>
                         <p>Because a large portion of Neural Network calculations can be done via linear algebra, computations have moved to the GPU.</p>
                         <ul>
-                            <li>GPU's specialize in affine transformations</li>
+                            <li>GPU's are highly geared towards linear algebra</li>
                             <li>GPU's have increased in speed in recent years!</li>
-                            <li>Personal top of the line setup: $10,000</li>
+                            <li><a href="http://graphific.github.io/posts/building-a-deep-learning-dream-machine/" target="_blank">Personal top of the line setup: $10,000</a></li>
                         </ul>
+                    </section>
 
-                        <div>
-                            <attribute>http://graphific.github.io/posts/building-a-deep-learning-dream-machine/</attribute>
-                        </div>
+                    <section>
+                        <h2>nVidia GeForce Titan X</h2>
+                        <img src="images/geforce.jpg" style="width:65%;"/>
                     </section>
 
                     <section>
                         <h2>Frameworks</h2>
                         <ul>
-                            <li><a href="https://en.wikipedia.org/wiki/Comparison_of_deep_learning_software" target="_blank">Deep Learning Software Comparison</a></li>
-                            <li><a href="https://www.tensorflow.org/">TensorFlow focuses on the ML Graph and Hardware Distrubtion</a></li>
+                            <li>Theano</li>
+                            <li>Torch</li>
+                            <li>Cafe</li>
+                            <li>DeepLearning4J</li>
+                            <li><a href="https://www.tensorflow.org/">TensorFlow</a></li>
                             <li><a href="http://www.infoworld.com/article/3140545/artificial-intelligence/how-to-approach-machine-learning-in-the-cloud.html" target="_blank">ML in the Cloud</a></li>
                         </ul>
+                        <attribute>http://machinelearningmastery.com/popular-deep-learning-libraries/</attribute>
+                        <attribute>https://en.wikipedia.org/wiki/Comparison_of_deep_learning_software</attribute>
                     </section>
 
                 </section>
@@ -493,7 +636,7 @@
                 <section>
 
                     <section data-background="images/machine.jpg">
-                        <h2 class="make-pop">TensorFlow Installation</h2>
+                        <h2 class="make-pop">TensorFlow Demo</h2>
                     </section>
 
                     <section>
@@ -550,20 +693,20 @@ Error: [('/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/py
                         </p>
                     </section>
 
-
-                </section>
-
-                <section>
-
-                    <section data-background="images/machine.jpg">
-                        <h2 class="make-pop">TensorFlow Demo</h2>
+                    <section>
+                        <h2>TensorFlow on late 2015 Mac</h2>
+                        <ul>
+                            <li>Completed standard training of the MNIST image set in about 10min</li>
+                        </ul>
                     </section>
 
                     <section>
-                        <p>85 runs at 126ms = </p>
+                        <h2>Machine VS Human</h2>
+                        <p>Let's see how a neural net does on our word classification problem!</p>
                     </section>
 
                 </section>
+
 
                 <section>
 
@@ -571,10 +714,12 @@ Error: [('/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/py
                         <h2 class="make-pop">Applications in Education</h2>
                     </section>
 
-
-
                     <section>
-
+                        <ul>
+                            <li>Course Placement from Complex Data Sets</li>
+                            <li>Early Course Success Prediction & Intervention</li>
+                            <li>Enhanced Adaptive Assessments?</li>
+                        </ul>
                     </section>
 
                 </section>
@@ -591,12 +736,12 @@ Error: [('/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/py
                             <li><a href="http://www.computerworld.com/article/3123158/computer-hardware/ibm-shows-how-fast-its-brain-like-chip-can-learn.html" target="_blank">IBM's Brain Like Chips</a></li>
                             <li>Integration of Multiple Neural Networks</li>
                             <li><a href="https://en.wikipedia.org/wiki/Types_of_artificial_neural_networks" target="_blank">All Neural Networks (many not covered here)</a></li>
+                            <li>Dealing with "overfitting" (tools like dropout...)</li>
                         </ul>
                     </section>
 
                     <section>
-                        <h3>No PHD Needed! Horse Pucky!</h3>
-                        <h4>Math & Intuition Required!</h4>
+                        <h3>No PHD Needed? Horse Pucky!</h3>
                         <ul>
                             <li><a href="http://www.techrepublic.com/article/why-ai-and-machine-learning-are-so-hard-facebook-and-google-weigh-in/" target="_blank">Why AI and machine learning are so hard, Facebook and Google weigh in</a></li>
                         </ul>
@@ -632,7 +777,6 @@ Error: [('/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/py
                             <h2>Machine Learning Basics</h2>
                             <li><a href="http://blog.deepgram.com/how-to-get-a-job-in-deep-learning/" target="_blank">Full Time Machine Learning?</a></li>
                             <li><a href="https://onionesquereality.wordpress.com/2016/05/18/where-does-the-sigmoid-in-logistic-regression-come-from/" target="_blank">Where does the Sigmoid in Logistic Regression come from?</a></li>
-                            <li><a href="http://www.techrepublic.com/article/why-ai-and-machine-learning-are-so-hard-facebook-and-google-weigh-in/" target="_blank">Why AI and machine learning are so hard, Facebook and Google weigh in</a></li>
                             <li><a href="https://www.youtube.com/watch?v=eikJboPQDT0" target="_blank">Gradient Descent Video</a></li>
                         </ul>
                     </section>
