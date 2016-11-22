@@ -7,20 +7,24 @@ import tensorflow as tf
 # Original from https://github.com/jasonbaldridge/try-tf/
 
 # Global variables.
-BATCH_SIZE = 5  # The number of training examples to use per training step.
-PERCENT_TRAINING = 0.5;
+BATCH_SIZE = 20  # The number of training examples to use per training step.
+PERCENT_TESTING = 0.75;
 
 # Define the flags useable from the command line.
 tf.app.flags.DEFINE_string('data','./server/exports/mlData.json', 'File containing the data, labels, features.')
+
 tf.app.flags.DEFINE_integer('num_epochs', 1, 'Number of examples to separate from the training data for the validation set.')
+
 tf.app.flags.DEFINE_boolean('verbose', False, 'Produce verbose output.')
+
+tf.app.flags.DEFINE_integer('num_hidden', 182, 'Number of nodes in the hidden layer.')
+
 FLAGS = tf.app.flags.FLAGS
 
 
 # Extract numpy representations of the labels and features given rows consisting of:
 def extract_data(filename):
 
-    # Arrays to hold the labels and inputVectors.
     trainLabels = []
     trainVecs = []
 
@@ -33,14 +37,14 @@ def extract_data(filename):
     labels_map = fileData["labelMap"]
 
     totalRows = len(fileData["data"])
-    maxTrainingIndex = int(round(totalRows * PERCENT_TRAINING, 0))
+    maxTrainingIndex = int(round(totalRows * PERCENT_TESTING, 0))
 
     for fileDataEntryIndex in range(0, maxTrainingIndex):
         fileDataEntry = fileData["data"][fileDataEntryIndex]
         trainLabels.append(int(fileDataEntry["label"]))
         trainVecs.append([float(x) for x in fileDataEntry["oneHotValue"]])
 
-    for fileDataEntryIndex in range(maxTrainingIndex + 1, totalRows):
+    for fileDataEntryIndex in range(maxTrainingIndex, totalRows):
         fileDataEntry = fileData["data"][fileDataEntryIndex]
         testLabels.append(int(fileDataEntry["label"]))
         testVecs.append([float(x) for x in fileDataEntry["oneHotValue"]])
@@ -60,53 +64,92 @@ def extract_data(filename):
     # Convert the int numpy array into a one-hot matrix.
     testLabels_onehot = (np.arange(len(labels_map)) == testLabels_np[:, None]).astype(np.float32)
 
-
     # Return a pair of the feature matrix and the one-hot label matrix.
     return trainVecs_np, trainLabels_onehot, testVecs_np, testLabels_onehot, labels_map
 
 
-def main(argv=None):
+# Init weights method. (Lifted from Delip Rao: http://deliprao.com/archives/100)
+def init_weights(namespace, shape, init_method='xavier', xavier_params = (None, None)):
+    if init_method == 'zeros':
+        return tf.Variable(tf.zeros(shape, dtype=tf.float32), name=namespace + '_hidden_W')
+    elif init_method == 'uniform':
+        return tf.Variable(tf.random_normal(shape, stddev=0.01, dtype=tf.float32), name=namespace + '_hidden_W')
+    else: #xavier
+        (fan_in, fan_out) = xavier_params
+        low = -4*np.sqrt(6.0/(fan_in + fan_out)) # {sigmoid:4, tanh:1}
+        high = 4*np.sqrt(6.0/(fan_in + fan_out))
+        return tf.Variable(tf.random_uniform(shape, minval=low, maxval=high, dtype=tf.float32), name=namespace + '_hidden_W')
 
+
+def main(argv=None):
     # Be verbose?
     verbose = FLAGS.verbose
 
     # Get the data.
     data_filename = FLAGS.data
 
-    # Extract it into numpy matrices.
+    # Extract it into numpy arrays.
     data, labels, testData, testLabels, labels_map = extract_data(data_filename)
 
-    # Get the shape of the training data. (used to be train_size)
     data_size, num_features = data.shape
+    testData_size, num_testData_features = testData.shape
 
     num_labels = len(labels_map)
 
     print "data shape: " + str(num_features)
-    print "data rows: " + str(data_size)
+    print "train data rows: " + str(data_size)
+    print "test data rows: " + str(testData_size)
     print "total labels: " + str(num_labels)
 
     # Get the number of epochs for training.
     num_epochs = FLAGS.num_epochs
 
+    # Get the size of layer one.
+    num_hidden = FLAGS.num_hidden
+
     # This is where training samples and labels are fed to the graph.
     # These placeholder nodes will be fed a batch of training data at each
     # training step using the {feed_dict} argument to the Run() call below.
-    # NOTE: we provide shape of None because we will have an arbitrary number of data rows, num_features is the dimension of of one row of inputs
-    x = tf.placeholder("float", shape=[None, num_features])
-    y_ = tf.placeholder("float", shape=[None, num_labels])
+    x = tf.placeholder("float", shape=[None, num_features], name="x")
+    y_ = tf.placeholder("float", shape=[None, num_labels], name="y")
 
     # For the test data, hold the entire dataset in one constant node.
     data_node = tf.constant(data)
 
+    # Configurable Dropout Rate
+    dropoutKeepProbability = tf.placeholder("float")
+
+
     # Define and initialize the network.
 
-    # These are the weights that inform how much each feature contributes to
-    # the classification.
-    W = tf.Variable(tf.zeros([num_features, num_labels]))
-    b = tf.Variable(tf.zeros([num_labels]))
-    y = tf.nn.softmax(tf.matmul(x,W) + b)
+    # Initialize the hidden weights and biases.
+    w_hidden = init_weights(
+        'w_hidden',
+        [num_features, num_hidden],
+        'xavier',
+        xavier_params=(num_features, num_hidden))
+
+    b_hidden = init_weights('b_hidden', [1, num_hidden], 'zeros')
+
+    # The hidden layer.
+    hidden = tf.nn.relu(tf.matmul(x,w_hidden) + b_hidden)
+
+    dropout = tf.nn.dropout(hidden, dropoutKeepProbability)
+
+    # Initialize the output weights and biases.
+    w_out = init_weights(
+        'w_out',
+        [num_hidden, num_labels],
+        'xavier',
+        xavier_params=(num_hidden, num_labels))
+
+    b_out = init_weights('b_out', [1, num_labels], 'zeros')
+
+    # The output layer.
+    y = tf.nn.softmax(tf.matmul(dropout, w_out) + b_out)
 
     # Optimization.
+    # cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
     cross_entropy = -tf.reduce_sum(y_*tf.log(y))
     train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
 
@@ -119,24 +162,24 @@ def main(argv=None):
 
     # Create a local session to run this computation.
     with tf.Session() as s:
-
         # Run all the initializers to prepare the trainable parameters.
         tf.initialize_all_variables().run()
 
         writer = tf.train.SummaryWriter('./logs', s.graph)
 
+        # Iterate and train.
         for step in xrange(num_epochs * data_size // BATCH_SIZE):
+            if verbose:
+                print step,
 
             offset = (step * BATCH_SIZE) % data_size
             batch_data = data[offset:(offset + BATCH_SIZE), :]
             batch_labels = labels[offset:(offset + BATCH_SIZE)]
-            train_step.run(feed_dict={x: batch_data, y_: batch_labels})
+            train_step.run(feed_dict={x: batch_data, y_: batch_labels, dropoutKeepProbability: 0.9})
 
-        print "Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels})
+        print "Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels, dropoutKeepProbability: 1.0})
+        print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels, dropoutKeepProbability: 1.0})
 
-        print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels})
 
-
-# this approach allows the args from the tenserflow args setup to kick in
 if __name__ == '__main__':
     tf.app.run()

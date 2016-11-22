@@ -8,7 +8,8 @@ import tensorflow as tf
 
 # Global variables.
 BATCH_SIZE = 20  # The number of training examples to use per training step.
-PERCENT_TESTING = 0.75;
+PERCENT_TRAINING = 0.75;
+DROPOUT_KEEP_RATE = 0.85;
 
 # Define the flags useable from the command line.
 tf.app.flags.DEFINE_string('data','./server/exports/mlData.json', 'File containing the data, labels, features.')
@@ -17,10 +18,10 @@ tf.app.flags.DEFINE_boolean('verbose', False, 'Produce verbose output.')
 tf.app.flags.DEFINE_integer('num_hidden', 182, 'Number of nodes in the hidden layer.')
 FLAGS = tf.app.flags.FLAGS
 
-
 # Extract numpy representations of the labels and features given rows consisting of:
 def extract_data(filename):
 
+    # Arrays to hold the labels and inputVectors.
     trainLabels = []
     trainVecs = []
 
@@ -33,7 +34,7 @@ def extract_data(filename):
     labels_map = fileData["labelMap"]
 
     totalRows = len(fileData["data"])
-    maxTrainingIndex = int(round(totalRows * PERCENT_TESTING, 0))
+    maxTrainingIndex = int(round(totalRows * PERCENT_TRAINING, 0))
 
     for fileDataEntryIndex in range(0, maxTrainingIndex):
         fileDataEntry = fileData["data"][fileDataEntryIndex]
@@ -87,6 +88,7 @@ def main(argv=None):
     # Extract it into numpy arrays.
     data, labels, testData, testLabels, labels_map = extract_data(data_filename)
 
+    # Get the shape of the training data.
     data_size, num_features = data.shape
     testData_size, num_testData_features = testData.shape
 
@@ -112,23 +114,34 @@ def main(argv=None):
     # For the test data, hold the entire dataset in one constant node.
     data_node = tf.constant(data)
 
+    dropoutKeepProbability = tf.placeholder("float")
+
+
     # Define and initialize the network.
 
-    # Initialize the hidden weights and biases.
-    w_hidden = init_weights(
-        'w_hidden',
+    # The first hidden layer.
+    w_hidden1 = init_weights(
+        'w_hidden1',
         [num_features, num_hidden],
         'xavier',
         xavier_params=(num_features, num_hidden))
 
-    b_hidden = init_weights('b_hidden', [1, num_hidden], 'zeros')
+    b_hidden1 = init_weights('b_hidden1', [1, num_hidden], 'zeros')
+    hidden1 = tf.nn.tanh(tf.matmul(x,w_hidden1) + b_hidden1)
+    dropout1 = tf.nn.dropout(hidden1, dropoutKeepProbability, name="dropout1")
 
-    # The hidden layer.
-    hidden = tf.nn.relu(tf.matmul(x,w_hidden) + b_hidden)
+    # The second hidden layer.
+    w_hidden2 = init_weights(
+        'w_hidden2',
+        [num_features, num_hidden],
+        'xavier',
+        xavier_params=(num_features, num_hidden))
 
-    dropout = tf.nn.dropout(hidden, 1.0)
+    b_hidden2 = init_weights('b_hidden2', [1, num_hidden], 'zeros')
+    hidden2 = tf.nn.tanh(tf.matmul(dropout1, w_hidden2) + b_hidden2)
+    dropout2 = tf.nn.dropout(hidden2, dropoutKeepProbability, name="dropout2")
 
-    # Initialize the output weights and biases.
+    # Final SOFTMAX LAYER
     w_out = init_weights(
         'w_out',
         [num_hidden, num_labels],
@@ -138,7 +151,7 @@ def main(argv=None):
     b_out = init_weights('b_out', [1, num_labels], 'zeros')
 
     # The output layer.
-    y = tf.nn.softmax(tf.matmul(dropout, w_out) + b_out)
+    y = tf.nn.softmax(tf.matmul(dropout2, w_out) + b_out)
 
     # Optimization.
     # cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
@@ -167,10 +180,10 @@ def main(argv=None):
             offset = (step * BATCH_SIZE) % data_size
             batch_data = data[offset:(offset + BATCH_SIZE), :]
             batch_labels = labels[offset:(offset + BATCH_SIZE)]
-            train_step.run(feed_dict={x: batch_data, y_: batch_labels})
+            train_step.run(feed_dict={x: batch_data, y_: batch_labels, dropoutKeepProbability: 0.9})
 
-        print "Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels})
-        print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels})
+        print "Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels, dropoutKeepProbability: 1.0})
+        print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels, dropoutKeepProbability: 1.0})
 
 
 if __name__ == '__main__':
