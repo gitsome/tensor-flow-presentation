@@ -60,7 +60,7 @@
                     '<div class="row">',
                         '<div class="col-xs-12">',
 
-                            '<h1>Machine Learning Demo</h1>',
+                            '<h1>Humans VS Machines!</h1>',
 
                             '<ml-schemes class="anim-fade-in" ng-if="mode === \'main\'"></ml-schemes>',
                             '<ml-edit-scheme class="anim-fade-in" scheme="currentScheme" ng-if="mode === \'edit\'"></ml-schemes>',

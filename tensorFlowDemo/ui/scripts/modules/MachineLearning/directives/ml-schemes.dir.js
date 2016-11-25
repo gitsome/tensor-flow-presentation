@@ -141,7 +141,7 @@
                         '<div class="row view-title">',
 
                             '<div class="col-xs-7">',
-                                '<h2>All Schemes</h2>',
+                                '<h2>All Schemes (Rule Sets)</h2>',
                             '</div>',
 
                             '<div class="col-xs-5 text-right">',
@@ -172,7 +172,7 @@
                         '<div class="ml-schemes-test-container" ng-if="ML_VIEW_MODE === \'view\'">',
                             '<div class="row">',
                                 '<div class="col-xs-12">',
-                                    '<button class="btn btn-primary btn-lg btn-full-width" ng-click="takeTest()"><i class="fa fa-check-circle"></i> Take the Test!</button>',
+                                    '<button class="btn btn-primary btn-lg btn-full-width" ng-click="takeTest()"><i class="fa fa-check-circle"></i> Take the Test For These Rule Sets!</button>',
                                 '</div>',
                             '</div>',
                         '</div>',

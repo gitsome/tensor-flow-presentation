@@ -5,6 +5,8 @@ module.exports = function(app, routeAPI){
     var RequestHandler = require('../classes/RequestHandler.cls.js')();
     var jsonfile = require('jsonfile');
 
+    var _ = require('underscore');
+
 
     /*============ PRIVATE VARIABLES/METHODS ============*/
 
@@ -147,6 +149,65 @@ module.exports = function(app, routeAPI){
             that.fail("error getting data");
         }
 
+    }));
+
+    /*==================================== SAVE TEST RESULTS ====================================*/
+
+    app.post("/services/results", RequestHandler(function (req, res) {
+
+        var that = this;
+
+        /*============ GATHER PARAMS ============*/
+
+        var query = req.query;
+        var params = req.params;
+        var testResults = req.body;
+
+        services.testResults.record({
+            sessionId: req.session.id,
+            testResults: testResults,
+            date: new Date().getTime()
+        });
+
+        var records = services.testResults.get();
+        var passed = _.filter(records, function (record) {
+            return record.testResults.passed === 'TRUE';
+        });
+
+        var passedPercent = records.length ? (passed.length/records.length) : 0;
+
+        var averagePassedQuestions = 0;
+
+        if (passed.length) {
+
+            var runningTotal = _.reduce(passed, function (memo, passedRecord) {
+                return memo + passedRecord.testResults.questions;
+            }, 0);
+
+            averagePassedQuestions = runningTotal / passed.length;
+        }
+
+
+        /*============ RESPONSE LOGIC ============*/
+
+        that.success({
+            totalRecords: records.length,
+            passedRecords: passed.length,
+            averagePassedQuestions: averagePassedQuestions
+        });
+
+    }));
+
+    app.get("/services/results", RequestHandler(function (req, res) {
+
+        var that = this;
+
+        /*============ GATHER PARAMS ============*/
+
+
+        /*============ RESPONSE LOGIC ============*/
+
+        that.success(services.testResults.get());
     }));
 
 };

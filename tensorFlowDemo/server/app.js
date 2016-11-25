@@ -5,11 +5,12 @@
     /*============ MAIN REQUIRED LIBRARIES ============*/
 
     var Promise = require("bluebird");
-    var path = require('path'); //path utilities
+    var path = require('path');                 // path utilities
 
     var express = require('express');
-    var http = require('http'); //express wraps http, but we need a low level reference for socket.io
-    var request = require('request'); //request wraps http for a simpler http api
+    var http = require('http');                 // express wraps http, but we need a low level reference for socket.io
+    var request = require('request');           // request wraps http for a simpler http api
+    var session = require('express-session')    // in memory session ids
 
     var bodyParser = require('body-parser');
     var methodOverride = require('method-override');
@@ -81,6 +82,13 @@
         app.set('views', __dirname + '/views');
         app.set('view engine', 'hjs');
 
+        // simple sessions
+        app.use(session({
+          secret: 'machinelearning',
+          resave: false,
+          saveUninitialized: true
+        }));
+
         // favicon, errorHandling
         app.use(errorHandler({ dumpExceptions: true, showStack: true }));
 
@@ -115,6 +123,8 @@
             appAPI.services['mode'] = require('./services/mode.svc.js')(appAPI);
 
             appAPI.services['mlData'] = require('./services/mlData.svc.js')(appAPI);
+
+            appAPI.services['testResults'] = require('./services/testResults.svc.js')(appAPI);
 
             resolve();
         });

@@ -81,6 +81,7 @@
             <script src="scripts/modules/MachineLearning/services/StringTransformService.svc.js"></script>
             <script src="scripts/modules/MachineLearning/services/SeededRandom.svc.js"></script>
             <script src="scripts/modules/MachineLearning/services/DataGeneratorService.svc.js"></script>
+            <script src="scripts/modules/MachineLearning/services/TestResultsService.svc.js"></script>
             <script src="scripts/modules/MachineLearning/services/ModalService.svc.js"></script>
             <!-- DIRECTIVES -->
             <script src="scripts/modules/MachineLearning/directives/ml-modal.dir.js"></script>

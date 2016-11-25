@@ -339,6 +339,19 @@ ml-scheme-transform textarea {
 }
 
 
+.ml-schemes-test-instructions {
+    font-size: 18px;
+}
+
+.ml-schemes-test-instructions h3 {
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+.ml-schemes-test-instructions li {
+    margin-bottom: 20px;
+}
+
 .ml-schemes-test-instructions .btn {
     margin-top: 15px;
 }

@@ -16,8 +16,9 @@
                 'Moment',
                 'SchemeService',
                 'StringTransformService',
+                'TestResultsService',
 
-                function ($scope, $element, $timeout, Moment, SchemeService, StringTransformService) {
+                function ($scope, $element, $timeout, Moment, SchemeService, StringTransformService, TestResultsService) {
 
                     /*============ PRIVATE VARIABLES =============*/
 
@@ -76,7 +77,7 @@
 
                             $scope.schemesCount = schemes.length;
 
-                            MAX_QUESTIONS = schemes.length * 100; // I think this should be some type of exponential... would get progressively harder with more
+                            MAX_QUESTIONS = schemes.length * 50; // I think this should be some type of exponential... would get progressively harder with more
 
                             INTERVAL_CORRECT = schemes.length * 10; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
 
@@ -87,6 +88,8 @@
                     var loadFakeAnswers = function () {
 
                         $scope.testComplete = true;
+
+                        $scope.passed = 'TRUE';
 
                         var randomNum;
 
@@ -240,6 +243,16 @@
 
                     /*============ LISTENERS ============*/
 
+                    $scope.$watch('testComplete', function (isComplete) {
+                        if (isComplete) {
+                            TestResultsService.saveResults({
+                                passed: $scope.passed,
+                                questions: $scope.answers.length,
+                                maxIntervalCorrectPercent: $scope.maxIntervalCorrectPercent
+                            });
+                        }
+                    });
+
 
                     /*============ INITIALIZATION ============*/
 
@@ -247,9 +260,8 @@
 
                     loadSchemes().then(function () {
 
-                        //loadFakeAnswers();
-
-                        loadNextQuestion();
+                        loadFakeAnswers();
+                        //loadNextQuestion();
                     });
                 }
             ],
@@ -258,9 +270,18 @@
 
                 '<div ng-if="showingInstructions" class="ml-schemes-test-instructions">',
 
-                    '<h2>Scheme Test</h2>',
+                    '<h2>Human Intuition Test</h2>',
                     '<div class="alert alert-info">',
-                        '<i class="fa fa-info-circle"></i> The goal is to correctly relate each string to the Rule Set used to generate it. The test will continue until you reach a certain threshold of percent correct or until you reach the max number of allowed questions.',
+
+                        '<h3><i class="fa fa-info-circle"></i> Please Read the Following Instructions</h3>',
+
+                        '<ol>',
+                            '<li>For each string, guess which "Rule Set" was used to generate that string by clicking one of the "Rule Set" buttons.</li>',
+                            '<li>Don\'t spend too much time on each one. Just look, get a quick feeling, and guess.</li>',
+                            '<li>After each guess, you will be shown if you were correct or wrong.</li>',
+                            '<li>The test is adaptive, so just keep clicking until it stops.</li>',
+                        '</ol>',
+
                         '<div>',
                             '<button class="btn btn-default btn-lg btn-full-width" ng-click="startTest()">Begin Test</button>',
                         '</div>',
@@ -288,7 +309,7 @@
 
                 '<div class="ml-schemes-test-report anim-fade-in" ng-if="!showingInstructions && testComplete">',
 
-                    '<h3>Test Is Complete. Please report the following scores:</h3>',
+                    '<h3>Test Is Complete!</h3>',
 
                     '<div class="well ml-report-table">',
                         '<div class="row">',
