@@ -277,8 +277,7 @@
 
                         '<ol>',
                             '<li>For each string, guess which "Rule Set" was used to generate that string by clicking one of the "Rule Set" buttons.</li>',
-                            '<li>After each guess, you will be shown if you were correct or wrong.</li>',
-                            '<li>Don\'t spend too much time on each one. Just look, get a quick feeling, and guess.</li>',
+                            '<li>Spend LESS than 5 seconds per string. Just look, get a quick feeling, and guess.</li>',
                             '<li>Relax and do your best to develop intuition about the right ways to classify the strings.</li>',
                             '<li>The test is adaptive, so just keep guessing until it stops.</li>',
                             '<li>Good Luck!</li>',
