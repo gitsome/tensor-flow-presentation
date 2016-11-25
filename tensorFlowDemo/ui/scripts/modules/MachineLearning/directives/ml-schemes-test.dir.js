@@ -77,7 +77,7 @@
 
                             $scope.schemesCount = schemes.length;
 
-                            MAX_QUESTIONS = schemes.length * 50; // I think this should be some type of exponential... would get progressively harder with more
+                            MAX_QUESTIONS = schemes.length * 40;    // I think this should be some type of exponential... would get progressively harder with more
 
                             INTERVAL_CORRECT = schemes.length * 10; // this would be a good number to research based off the machine learning results (should represent the minimum number of questions before improvement starts)
 
@@ -260,8 +260,8 @@
 
                     loadSchemes().then(function () {
 
-                        loadFakeAnswers();
-                        //loadNextQuestion();
+                        //loadFakeAnswers();
+                        loadNextQuestion();
                     });
                 }
             ],
@@ -277,9 +277,11 @@
 
                         '<ol>',
                             '<li>For each string, guess which "Rule Set" was used to generate that string by clicking one of the "Rule Set" buttons.</li>',
-                            '<li>Don\'t spend too much time on each one. Just look, get a quick feeling, and guess.</li>',
                             '<li>After each guess, you will be shown if you were correct or wrong.</li>',
-                            '<li>The test is adaptive, so just keep clicking until it stops.</li>',
+                            '<li>Don\'t spend too much time on each one. Just look, get a quick feeling, and guess.</li>',
+                            '<li>Relax and do your best to develop intuition about the right ways to classify the strings.</li>',
+                            '<li>The test is adaptive, so just keep guessing until it stops.</li>',
+                            '<li>Good Luck!</li>',
                         '</ol>',
 
                         '<div>',
@@ -309,7 +311,7 @@
 
                 '<div class="ml-schemes-test-report anim-fade-in" ng-if="!showingInstructions && testComplete">',
 
-                    '<h3>Test Is Complete!</h3>',
+                    '<h3>Test Is Complete! Your results have been recorded and you can now close this tab. Thank You!</h3>',
 
                     '<div class="well ml-report-table">',
                         '<div class="row">',
