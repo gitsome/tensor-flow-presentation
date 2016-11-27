@@ -162,13 +162,24 @@ def main(argv=None):
         print "Train Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels})
         print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels})
 
-        f, plots = plt.subplots(2, sharex=True)
+        xTicks = [0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5,10.5,11.5,12.5,13.5,14.5,15.5,16.5,17.5,18.5,19.5,20.5,21.5,22.5,23.5,24.5,25.5]
+        xLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+        yTicks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
+        yLabels = [1,2,3,4,5,6,7]
+
+        fig, plots = plt.subplots(2)
+
+        plt.setp(plots, xticks=xTicks, xticklabels=xLabels, yticks=yTicks, yticklabels=yLabels)
+
+
         for i in range(2):
             # NOTE [:,i] is all rows in column i
             # This would be getting all weights from hidden layer to the ith label
+            plots[i].invert_yaxis()
             plots[i].pcolor(s.run(w_hidden)[:,i].reshape(7,26))
 
-        f.savefig('weights.png')
+        fig.savefig('weights.png')
 
 
 if __name__ == '__main__':
