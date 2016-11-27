@@ -3,20 +3,18 @@ import tensorflow.python.platform
 import json
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 # Original from https://github.com/jasonbaldridge/try-tf/
 
 # Global variables.
-BATCH_SIZE = 20  # The number of training examples to use per training step.
-PERCENT_TESTING = 0.75;
+BATCH_SIZE = 1  # The number of training examples to use per training step.
+PERCENT_TESTING = 0.5;
 
 # Define the flags useable from the command line.
 tf.app.flags.DEFINE_string('data','./server/exports/mlData.json', 'File containing the data, labels, features.')
-
 tf.app.flags.DEFINE_integer('num_epochs', 1, 'Number of examples to separate from the training data for the validation set.')
-
 tf.app.flags.DEFINE_boolean('verbose', False, 'Produce verbose output.')
-
 tf.app.flags.DEFINE_integer('num_hidden', 182, 'Number of nodes in the hidden layer.')
 
 FLAGS = tf.app.flags.FLAGS
@@ -116,42 +114,25 @@ def main(argv=None):
     # For the test data, hold the entire dataset in one constant node.
     data_node = tf.constant(data)
 
-    # Configurable Dropout Rate
-    dropoutKeepProbability = tf.placeholder("float")
-
-
     # Define and initialize the network.
 
     # Initialize the hidden weights and biases.
     w_hidden = init_weights(
         'w_hidden',
-        [num_features, num_hidden],
-        'xavier',
-        xavier_params=(num_features, num_hidden))
+        [num_features, num_labels],
+        'uniform')
 
-    b_hidden = init_weights('b_hidden', [1, num_hidden], 'zeros')
+    b_hidden = init_weights('b_hidden', [1, num_labels], 'zeros')
 
     # The hidden layer.
-    hidden = tf.nn.relu(tf.matmul(x,w_hidden) + b_hidden)
-
-    dropout = tf.nn.dropout(hidden, dropoutKeepProbability)
-
-    # Initialize the output weights and biases.
-    w_out = init_weights(
-        'w_out',
-        [num_hidden, num_labels],
-        'xavier',
-        xavier_params=(num_hidden, num_labels))
-
-    b_out = init_weights('b_out', [1, num_labels], 'zeros')
+    hidden = tf.matmul(x,w_hidden) + b_hidden;
 
     # The output layer.
-    y = tf.nn.softmax(tf.matmul(dropout, w_out) + b_out)
+    y = tf.nn.softmax(hidden);
 
     # Optimization.
-    # cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
     cross_entropy = -tf.reduce_sum(y_*tf.log(y))
-    train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
+    train_step = tf.train.GradientDescentOptimizer(0.03).minimize(cross_entropy)
 
     # Evaluation.
     correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
@@ -162,6 +143,7 @@ def main(argv=None):
 
     # Create a local session to run this computation.
     with tf.Session() as s:
+
         # Run all the initializers to prepare the trainable parameters.
         tf.initialize_all_variables().run()
 
@@ -175,10 +157,18 @@ def main(argv=None):
             offset = (step * BATCH_SIZE) % data_size
             batch_data = data[offset:(offset + BATCH_SIZE), :]
             batch_labels = labels[offset:(offset + BATCH_SIZE)]
-            train_step.run(feed_dict={x: batch_data, y_: batch_labels, dropoutKeepProbability: 0.9})
+            train_step.run(feed_dict={x: batch_data, y_: batch_labels})
 
-        print "Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels, dropoutKeepProbability: 1.0})
-        print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels, dropoutKeepProbability: 1.0})
+        print "Train Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels})
+        print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels})
+
+        f, plots = plt.subplots(2, sharex=True)
+        for i in range(2):
+            # NOTE [:,i] is all rows in column i
+            # This would be getting all weights from hidden layer to the ith label
+            plots[i].pcolor(s.run(w_hidden)[:,i].reshape(7,26))
+
+        f.savefig('weights.png')
 
 
 if __name__ == '__main__':

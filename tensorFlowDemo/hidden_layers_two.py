@@ -8,8 +8,7 @@ import tensorflow as tf
 
 # Global variables.
 BATCH_SIZE = 20  # The number of training examples to use per training step.
-PERCENT_TRAINING = 0.75;
-DROPOUT_KEEP_RATE = 0.85;
+PERCENT_TRAINING = 0.5;
 
 # Define the flags useable from the command line.
 tf.app.flags.DEFINE_string('data','./server/exports/mlData.json', 'File containing the data, labels, features.')
@@ -124,7 +123,7 @@ def main(argv=None):
         'w_hidden1',
         [num_features, num_hidden],
         'xavier',
-        xavier_params=(num_features, num_hidden))
+        xavier_params=(num_hidden, num_labels))
 
     b_hidden1 = init_weights('b_hidden1', [1, num_hidden], 'zeros')
     hidden1 = tf.nn.tanh(tf.matmul(x,w_hidden1) + b_hidden1)
@@ -135,7 +134,7 @@ def main(argv=None):
         'w_hidden2',
         [num_features, num_hidden],
         'xavier',
-        xavier_params=(num_features, num_hidden))
+        xavier_params=(num_hidden, num_labels))
 
     b_hidden2 = init_weights('b_hidden2', [1, num_hidden], 'zeros')
     hidden2 = tf.nn.tanh(tf.matmul(dropout1, w_hidden2) + b_hidden2)
@@ -180,9 +179,9 @@ def main(argv=None):
             offset = (step * BATCH_SIZE) % data_size
             batch_data = data[offset:(offset + BATCH_SIZE), :]
             batch_labels = labels[offset:(offset + BATCH_SIZE)]
-            train_step.run(feed_dict={x: batch_data, y_: batch_labels, dropoutKeepProbability: 0.9})
+            train_step.run(feed_dict={x: batch_data, y_: batch_labels, dropoutKeepProbability: 0.6})
 
-        print "Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels, dropoutKeepProbability: 1.0})
+        print "Train Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels, dropoutKeepProbability: 1.0})
         print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels, dropoutKeepProbability: 1.0})
 
 
