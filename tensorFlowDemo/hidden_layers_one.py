@@ -172,6 +172,10 @@ def main(argv=None):
 
         plt.setp(plots, xticks=xTicks, xticklabels=xLabels, yticks=yTicks, yticklabels=yLabels)
 
+        plots[0].set_title("Schema A")
+        plots[1].set_title("Schema B")
+
+        plt.subplots_adjust(hspace=0.5)
 
         for i in range(2):
             # NOTE [:,i] is all rows in column i
