@@ -74,8 +74,6 @@
 
                             SchemeService.updateOrCreateScheme(newScheme).then(function (serverScheme) {
 
-                                console.log("serverscheme:", serverScheme);
-
                                 return SchemeService.get().then(function (schemes_in) {
 
                                     $scope.schemes = schemes_in;

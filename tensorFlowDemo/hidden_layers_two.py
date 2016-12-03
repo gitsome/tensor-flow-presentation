@@ -7,14 +7,14 @@ import tensorflow as tf
 # Original from https://github.com/jasonbaldridge/try-tf/
 
 # Global variables.
-BATCH_SIZE = 20  # The number of training examples to use per training step.
+BATCH_SIZE = 1  # The number of training examples to use per training step.
 PERCENT_TRAINING = 0.5;
+LEARNING_RATE = 0.02;
 
 # Define the flags useable from the command line.
 tf.app.flags.DEFINE_string('data','./server/exports/mlData.json', 'File containing the data, labels, features.')
 tf.app.flags.DEFINE_integer('num_epochs', 1, 'Number of examples to separate from the training data for the validation set.')
 tf.app.flags.DEFINE_boolean('verbose', False, 'Produce verbose output.')
-tf.app.flags.DEFINE_integer('num_hidden', 182, 'Number of nodes in the hidden layer.')
 FLAGS = tf.app.flags.FLAGS
 
 # Extract numpy representations of the labels and features given rows consisting of:
@@ -102,7 +102,8 @@ def main(argv=None):
     num_epochs = FLAGS.num_epochs
 
     # Get the size of layer one.
-    num_hidden = FLAGS.num_hidden
+    hidden_layer_size_1 = num_features
+    hidden_layer_size_2 = num_features
 
     # This is where training samples and labels are fed to the graph.
     # These placeholder nodes will be fed a batch of training data at each
@@ -113,63 +114,53 @@ def main(argv=None):
     # For the test data, hold the entire dataset in one constant node.
     data_node = tf.constant(data)
 
-    dropoutKeepProbability = tf.placeholder("float")
-
-
     # Define and initialize the network.
 
-    # The first hidden layer.
-    w_hidden1 = init_weights(
-        'w_hidden1',
-        [num_features, num_hidden],
-        'xavier',
-        xavier_params=(num_hidden, num_labels))
+    # tf Graph input
+    x = tf.placeholder("float", [None, num_features])
+    y = tf.placeholder("float", [None, num_labels])
 
-    b_hidden1 = init_weights('b_hidden1', [1, num_hidden], 'zeros')
-    hidden1 = tf.nn.tanh(tf.matmul(x,w_hidden1) + b_hidden1)
-    dropout1 = tf.nn.dropout(hidden1, dropoutKeepProbability, name="dropout1")
 
-    # The second hidden layer.
-    w_hidden2 = init_weights(
-        'w_hidden2',
-        [num_features, num_hidden],
-        'xavier',
-        xavier_params=(num_hidden, num_labels))
+    # Create model
+    def multilayer_perceptron(x, weights, biases):
+        # Hidden layer with RELU activation
+        layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
+        layer_1 = tf.nn.relu(layer_1)
+        # Hidden layer with RELU activation
+        layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
+        layer_2 = tf.nn.relu(layer_2)
+        # Output layer with linear activation
+        out_layer = tf.matmul(layer_2, weights['out']) + biases['out']
+        return out_layer
 
-    b_hidden2 = init_weights('b_hidden2', [1, num_hidden], 'zeros')
-    hidden2 = tf.nn.tanh(tf.matmul(dropout1, w_hidden2) + b_hidden2)
-    dropout2 = tf.nn.dropout(hidden2, dropoutKeepProbability, name="dropout2")
+    # Store layers weight & bias
+    weights = {
+        'h1': init_weights('w1', [num_features, hidden_layer_size_1], 'uniform'),
+        'h2': init_weights('w2', [hidden_layer_size_1, hidden_layer_size_2], 'uniform'),
+        'out': init_weights('wOut', [hidden_layer_size_2, num_labels], 'uniform')
+    }
+    biases = {
+        'b1': init_weights('b1', [1, hidden_layer_size_1], 'zeros'),
+        'b2': init_weights('b2', [1, hidden_layer_size_2], 'zeros'),
+        'out': init_weights('bOut', [1, num_labels], 'zeros')
+    }
 
-    # Final SOFTMAX LAYER
-    w_out = init_weights(
-        'w_out',
-        [num_hidden, num_labels],
-        'xavier',
-        xavier_params=(num_hidden, num_labels))
+    # Construct model
+    pred = multilayer_perceptron(x, weights, biases)
 
-    b_out = init_weights('b_out', [1, num_labels], 'zeros')
-
-    # The output layer.
-    y = tf.nn.softmax(tf.matmul(dropout2, w_out) + b_out)
-
-    # Optimization.
-    # cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_))
-    cross_entropy = -tf.reduce_sum(y_*tf.log(y))
-    train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
-
-    # Evaluation.
-    correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+    # Define loss and optimizer
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
+    optimizer = tf.train.AdamOptimizer(learning_rate=LEARNING_RATE).minimize(cost)
 
     #summary
     summary_op = tf.merge_all_summaries()
 
     # Create a local session to run this computation.
-    with tf.Session() as s:
+    with tf.Session() as sess:
         # Run all the initializers to prepare the trainable parameters.
         tf.initialize_all_variables().run()
 
-        writer = tf.train.SummaryWriter('./logs', s.graph)
+        writer = tf.train.SummaryWriter('./logs', sess.graph)
 
         # Iterate and train.
         for step in xrange(num_epochs * data_size // BATCH_SIZE):
@@ -179,10 +170,14 @@ def main(argv=None):
             offset = (step * BATCH_SIZE) % data_size
             batch_data = data[offset:(offset + BATCH_SIZE), :]
             batch_labels = labels[offset:(offset + BATCH_SIZE)]
-            train_step.run(feed_dict={x: batch_data, y_: batch_labels, dropoutKeepProbability: 0.6})
 
-        print "Train Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels, dropoutKeepProbability: 1.0})
-        print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels, dropoutKeepProbability: 1.0})
+            sess.run([optimizer, cost], feed_dict={x: batch_data, y: batch_labels})
+
+        # Test model
+        correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
+        # Calculate accuracy
+        accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+        print "Accuracy:", accuracy.eval({x: testData, y: testLabels})
 
 
 if __name__ == '__main__':
