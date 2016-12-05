@@ -137,7 +137,7 @@ def main(argv=None):
         xavier_params=(num_hidden, num_labels))
 
     b_hidden2 = init_weights('b_hidden2', [1, num_hidden], 'zeros')
-    hidden2 = tf.nn.tanh(tf.matmul(dropout1, w_hidden2) + b_hidden2)
+    hidden2 = tf.nn.relu(tf.matmul(dropout1, w_hidden2) + b_hidden2)
     dropout2 = tf.nn.dropout(hidden2, dropoutKeepProbability, name="dropout2")
 
     # Final SOFTMAX LAYER
@@ -166,8 +166,9 @@ def main(argv=None):
 
     # Create a local session to run this computation.
     with tf.Session() as s:
+
         # Run all the initializers to prepare the trainable parameters.
-        tf.initialize_all_variables().run()
+        tf.global_variables_initializer().run()
 
         writer = tf.train.SummaryWriter('./logs', s.graph)
 

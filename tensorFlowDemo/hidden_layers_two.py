@@ -4,7 +4,13 @@ import json
 import numpy as np
 import tensorflow as tf
 
+import random
+
 # Original from https://github.com/jasonbaldridge/try-tf/
+
+# set seed if required
+random.seed(15)
+tf.set_random_seed(15)
 
 # Global variables.
 BATCH_SIZE = 1  # The number of training examples to use per training step.
@@ -152,13 +158,19 @@ def main(argv=None):
     cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
     optimizer = tf.train.AdamOptimizer(learning_rate=LEARNING_RATE).minimize(cost)
 
+    # Test model
+    correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
+    # Calculate accuracy
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+
     #summary
-    summary_op = tf.merge_all_summaries()
+    tf.summary.scalar('accurarcy', accuracy)
+    summary_op = tf.summary.merge_all()
 
     # Create a local session to run this computation.
     with tf.Session() as sess:
         # Run all the initializers to prepare the trainable parameters.
-        tf.initialize_all_variables().run()
+        tf.global_variables_initializer().run()
 
         writer = tf.train.SummaryWriter('./logs', sess.graph)
 
@@ -173,10 +185,9 @@ def main(argv=None):
 
             sess.run([optimizer, cost], feed_dict={x: batch_data, y: batch_labels})
 
-        # Test model
-        correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
-        # Calculate accuracy
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+            summary = sess.run(summary_op, feed_dict={x: testData, y: testLabels})
+            writer.add_summary(summary, step)
+
         print "Accuracy:", accuracy.eval({x: testData, y: testLabels})
 
 

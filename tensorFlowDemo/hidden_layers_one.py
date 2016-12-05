@@ -5,7 +5,13 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
+import random
+
 # Original from https://github.com/jasonbaldridge/try-tf/
+
+# set seed if required
+random.seed(15)
+tf.set_random_seed(15)
 
 # Global variables.
 BATCH_SIZE = 1  # The number of training examples to use per training step. We use 1 to simulate an individual updating their personal neural networks one example at a time
@@ -24,8 +30,24 @@ xLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
 yTicks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
 yLabels = [1,2,3,4,5,6,7]
 
+"""Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
+def variable_summaries(var, name):
 
-# Extract numpy representations of the labels and features given rows consisting of:
+    with tf.name_scope(name):
+        mean = tf.reduce_mean(var)
+        tf.summary.scalar('mean', mean)
+
+        with tf.name_scope('stddev'):
+
+            stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
+
+        tf.summary.scalar('stddev', stddev)
+        tf.summary.scalar('max', tf.reduce_max(var))
+        tf.summary.scalar('min', tf.reduce_min(var))
+        tf.summary.histogram('histogram', var)
+
+
+# Extract numpy representations of the labels and features
 def extract_data(filename):
 
     trainLabels = []
@@ -139,16 +161,18 @@ def main(argv=None):
     correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
+    tf.summary.scalar('accurarcy', accuracy)
+
     #summary
-    summary_op = tf.merge_all_summaries()
+    summary_op = tf.summary.merge_all()
 
     # Create a local session to run this computation.
-    with tf.Session() as s:
+    with tf.Session() as sess:
 
         # Run all the initializers to prepare the trainable parameters.
-        tf.initialize_all_variables().run()
+        tf.global_variables_initializer().run()
 
-        writer = tf.train.SummaryWriter('./logs', s.graph)
+        writer = tf.train.SummaryWriter('./logs', sess.graph)
 
         # Iterate and train.
         for step in xrange(num_epochs * data_size // BATCH_SIZE):
@@ -158,7 +182,10 @@ def main(argv=None):
             offset = (step * BATCH_SIZE) % data_size
             batch_data = data[offset:(offset + BATCH_SIZE), :]
             batch_labels = labels[offset:(offset + BATCH_SIZE)]
-            train_step.run(feed_dict={x: batch_data, y_: batch_labels})
+
+            _  = sess.run([train_step], feed_dict={x: batch_data, y_: batch_labels})
+            summary = sess.run(summary_op, feed_dict={x: testData, y_: testLabels})
+            writer.add_summary(summary, step)
 
 
         fig, plots = plt.subplots(2)
@@ -174,7 +201,7 @@ def main(argv=None):
             # NOTE [:,i] is all rows in column i
             # This would be getting all weights from hidden layer to the ith label
             plots[i].invert_yaxis()
-            plots[i].pcolor(s.run(w_hidden)[:,i].reshape(7,26))
+            plots[i].pcolor(sess.run(w_hidden)[:,i].reshape(7,26))
 
         fig.savefig('weights.png')
 
