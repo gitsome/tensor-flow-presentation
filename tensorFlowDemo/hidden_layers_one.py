@@ -1,11 +1,14 @@
 import tensorflow.python.platform
 
-import json
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
 import random
+
+from humanIntuitionUtils import graphHelpers
+from humanIntuitionUtils import extract_data
+from humanIntuitionUtils import variable_summaries
 
 # Original from https://github.com/jasonbaldridge/try-tf/
 
@@ -23,75 +26,6 @@ tf.app.flags.DEFINE_integer('num_epochs', 1, 'Number of examples to separate fro
 tf.app.flags.DEFINE_boolean('verbose', False, 'Produce verbose output.')
 
 FLAGS = tf.app.flags.FLAGS
-
-xTicks = [0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5,10.5,11.5,12.5,13.5,14.5,15.5,16.5,17.5,18.5,19.5,20.5,21.5,22.5,23.5,24.5,25.5]
-xLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-
-yTicks = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
-yLabels = [1,2,3,4,5,6,7]
-
-"""Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
-def variable_summaries(var, name):
-
-    with tf.name_scope(name):
-        mean = tf.reduce_mean(var)
-        tf.summary.scalar('mean', mean)
-
-        with tf.name_scope('stddev'):
-
-            stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
-
-        tf.summary.scalar('stddev', stddev)
-        tf.summary.scalar('max', tf.reduce_max(var))
-        tf.summary.scalar('min', tf.reduce_min(var))
-        tf.summary.histogram('histogram', var)
-
-
-# Extract numpy representations of the labels and features
-def extract_data(filename):
-
-    trainLabels = []
-    trainVecs = []
-
-    testLabels = []
-    testVecs = []
-
-    with open(filename) as data_file:
-        fileData = json.load(data_file)
-
-    labels_map = fileData["labelMap"]
-
-    totalRows = len(fileData["data"])
-    maxTrainingIndex = int(round(totalRows * PERCENT_TESTING, 0))
-
-    for fileDataEntryIndex in range(0, maxTrainingIndex):
-        fileDataEntry = fileData["data"][fileDataEntryIndex]
-        trainLabels.append(int(fileDataEntry["label"]))
-        trainVecs.append([float(x) for x in fileDataEntry["oneHotValue"]])
-
-    for fileDataEntryIndex in range(maxTrainingIndex, totalRows):
-        fileDataEntry = fileData["data"][fileDataEntryIndex]
-        testLabels.append(int(fileDataEntry["label"]))
-        testVecs.append([float(x) for x in fileDataEntry["oneHotValue"]])
-
-
-    # Convert the array of float arrays into a numpy float matrix.
-    trainVecs_np = np.matrix(trainVecs).astype(np.float32)
-    # Convert the array of int labels into a numpy array.
-    trainLabels_np = np.array(trainLabels).astype(dtype=np.uint8)
-    # Convert the int numpy array into a one-hot matrix.
-    trainLabels_onehot = (np.arange(len(labels_map)) == trainLabels_np[:, None]).astype(np.float32)
-
-    # Convert the array of float arrays into a numpy float matrix.
-    testVecs_np = np.matrix(testVecs).astype(np.float32)
-    # Convert the array of int labels into a numpy array.
-    testLabels_np = np.array(testLabels).astype(dtype=np.uint8)
-    # Convert the int numpy array into a one-hot matrix.
-    testLabels_onehot = (np.arange(len(labels_map)) == testLabels_np[:, None]).astype(np.float32)
-
-    # Return a pair of the feature matrix and the one-hot label matrix.
-    return trainVecs_np, trainLabels_onehot, testVecs_np, testLabels_onehot, labels_map
-
 
 # Init weights method. (Lifted from Delip Rao: http://deliprao.com/archives/100)
 def init_weights(namespace, shape, init_method='xavier', xavier_params = (None, None)):
@@ -114,7 +48,7 @@ def main(argv=None):
     data_filename = FLAGS.data
 
     # Extract it into numpy arrays.
-    data, labels, testData, testLabels, labels_map = extract_data(data_filename)
+    data, labels, testData, testLabels, labels_map = extract_data(data_filename, PERCENT_TESTING)
 
     data_size, num_features = data.shape
     testData_size, num_testData_features = testData.shape
@@ -190,7 +124,7 @@ def main(argv=None):
 
         fig, plots = plt.subplots(2)
 
-        plt.setp(plots, xticks=xTicks, xticklabels=xLabels, yticks=yTicks, yticklabels=yLabels)
+        plt.setp(plots, xticks=graphHelpers.xTicks, xticklabels=graphHelpers.xLabels, yticks=graphHelpers.yTicks, yticklabels=graphHelpers.yLabels)
 
         plots[0].set_title("Schema A")
         plots[1].set_title("Schema B")
