@@ -43,7 +43,10 @@ def main(argv=None):
     data_size, num_features = data.shape
     testData_size, num_testData_features = testData.shape
 
+    # Matrix dimensions
     num_labels = len(labels_map)
+    hidden_layer_size_1 = num_features
+    hidden_layer_size_2 = num_features
 
     print "data shape: " + str(num_features)
     print "train data rows: " + str(data_size)
@@ -52,10 +55,6 @@ def main(argv=None):
 
     # Get the number of epochs for training.
     num_epochs = FLAGS.num_epochs
-
-    # Get the size of layer one.
-    hidden_layer_size_1 = num_features
-    hidden_layer_size_2 = num_features
 
     # This is where training samples and labels are fed to the graph.
     # These placeholder nodes will be fed a batch of training data at each
@@ -66,36 +65,34 @@ def main(argv=None):
     # For the test data, hold the entire dataset in one constant node.
     data_node = tf.constant(data)
 
-    # Define and initialize the network.
-
 
     # =========== SINGLE HIDDEN LAYER TRACK ============
 
-    w_hidden = init_weights('w_hidden', [num_features, num_labels], 'uniform')
-    b_hidden = init_weights('b_hidden', [1, num_labels], 'zeros')
+    single_weights = init_weights('single_weights', [num_features, num_labels], 'uniform')
+    single_biases = init_weights('single_biases', [1, num_labels], 'zeros')
 
-    # The hidden layer.
-    hidden_single = tf.matmul(x,w_hidden) + b_hidden;
+    hidden_single = tf.matmul(x, single_weights) + single_biases;
 
 
     # =========== MULTI LAYER TRACK ============
 
-    weights = {
+    multi_weights = {
         'h1': init_weights('w1', [num_features, hidden_layer_size_1], 'uniform'),
         'h2': init_weights('w2', [hidden_layer_size_1, hidden_layer_size_2], 'uniform'),
         'out': init_weights('wOut', [hidden_layer_size_2, num_labels], 'uniform')
     }
-    biases = {
+    multi_biases = {
         'b1': init_weights('b1', [1, hidden_layer_size_1], 'zeros'),
         'b2': init_weights('b2', [1, hidden_layer_size_2], 'zeros'),
         'out': init_weights('bOut', [1, num_labels], 'zeros')
     }
 
-    hidden_multi = multilayer_perceptron(x, weights, biases)
+    hidden_multi = multilayer_perceptron(x, multi_weights, multi_biases)
 
+
+    # =========== MERGE MULTIPLE TRACKS ============
 
     hidden_combined = tf.concat(0, [hidden_single, hidden_multi])
-
 
     # The output layer.
     y = tf.nn.softmax(hidden_combined);
