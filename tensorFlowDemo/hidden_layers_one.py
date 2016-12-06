@@ -9,6 +9,7 @@ import random
 from humanIntuitionUtils import graphHelpers
 from humanIntuitionUtils import extract_data
 from humanIntuitionUtils import variable_summaries
+from humanIntuitionUtils import init_weights
 
 # Original from https://github.com/jasonbaldridge/try-tf/
 
@@ -26,18 +27,6 @@ tf.app.flags.DEFINE_integer('num_epochs', 1, 'Number of examples to separate fro
 tf.app.flags.DEFINE_boolean('verbose', False, 'Produce verbose output.')
 
 FLAGS = tf.app.flags.FLAGS
-
-# Init weights method. (Lifted from Delip Rao: http://deliprao.com/archives/100)
-def init_weights(namespace, shape, init_method='xavier', xavier_params = (None, None)):
-    if init_method == 'zeros':
-        return tf.Variable(tf.zeros(shape, dtype=tf.float32), name=namespace + '_hidden_W')
-    elif init_method == 'uniform':
-        return tf.Variable(tf.random_normal(shape, stddev=0.01, dtype=tf.float32), name=namespace + '_hidden_W')
-    else: #xavier
-        (fan_in, fan_out) = xavier_params
-        low = -4*np.sqrt(6.0/(fan_in + fan_out)) # {sigmoid:4, tanh:1}
-        high = 4*np.sqrt(6.0/(fan_in + fan_out))
-        return tf.Variable(tf.random_uniform(shape, minval=low, maxval=high, dtype=tf.float32), name=namespace + '_hidden_W')
 
 
 def main(argv=None):
@@ -124,7 +113,7 @@ def main(argv=None):
 
         fig, plots = plt.subplots(2)
 
-        plt.setp(plots, xticks=graphHelpers.xTicks, xticklabels=graphHelpers.xLabels, yticks=graphHelpers.yTicks, yticklabels=graphHelpers.yLabels)
+        plt.setp(plots, xticks=graphHelpers['xTicks'], xticklabels=graphHelpers['xLabels'], yticks=graphHelpers['yTicks'], yticklabels=graphHelpers['yLabels'])
 
         plots[0].set_title("Schema A")
         plots[1].set_title("Schema B")

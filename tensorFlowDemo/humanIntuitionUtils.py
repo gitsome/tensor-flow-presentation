@@ -4,10 +4,10 @@ import numpy as np
 import tensorflow as tf
 
 graphHelpers = {
-    'xTicks': [0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5,10.5,11.5,12.5,13.5,14.5,15.5,16.5,17.5,18.5,19.5,20.5,21.5,22.5,23.5,24.5,25.5],
-    'xLabels': ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-    'yTicks': [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5],
-    'yLabels': [1,2,3,4,5,6,7]
+    "xTicks": [0.5,1.5,2.5,3.5,4.5,5.5,6.5,7.5,8.5,9.5,10.5,11.5,12.5,13.5,14.5,15.5,16.5,17.5,18.5,19.5,20.5,21.5,22.5,23.5,24.5,25.5],
+    "xLabels": ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+    "yTicks": [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5],
+    "yLabels": [1,2,3,4,5,6,7]
 }
 
 # Extract numpy representations of the labels and features
@@ -71,3 +71,16 @@ def variable_summaries(var, name):
         tf.summary.scalar('max', tf.reduce_max(var))
         tf.summary.scalar('min', tf.reduce_min(var))
         tf.summary.histogram('histogram', var)
+
+
+# Init weights method. (Lifted from Delip Rao: http://deliprao.com/archives/100)
+def init_weights(namespace, shape, init_method='xavier', xavier_params = (None, None)):
+    if init_method == 'zeros':
+        return tf.Variable(tf.zeros(shape, dtype=tf.float32), name=namespace + '_hidden_W')
+    elif init_method == 'uniform':
+        return tf.Variable(tf.random_normal(shape, stddev=0.01, dtype=tf.float32), name=namespace + '_hidden_W')
+    else: #xavier
+        (fan_in, fan_out) = xavier_params
+        low = -4*np.sqrt(6.0/(fan_in + fan_out)) # {sigmoid:4, tanh:1}
+        high = 4*np.sqrt(6.0/(fan_in + fan_out))
+        return tf.Variable(tf.random_uniform(shape, minval=low, maxval=high, dtype=tf.float32), name=namespace + '_hidden_W')
