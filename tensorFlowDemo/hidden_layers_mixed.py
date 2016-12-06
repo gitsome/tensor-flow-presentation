@@ -13,11 +13,11 @@ from humanIntuitionUtils import multilayer_perceptron
 
 # Original from https://github.com/jasonbaldridge/try-tf/
 
-# set seed if required
+# SET SEEDS IF NEEDED FOR TESTING
 random.seed(15)
 tf.set_random_seed(15)
 
-# Global variables.
+# GLOBAL VARIABLES
 BATCH_SIZE = 1  # The number of training examples to use per training step. We use 1 to simulate an individual updating their personal neural networks one example at a time
 PERCENT_TESTING = 0.5;
 
@@ -112,9 +112,11 @@ def main(argv=None):
     correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
+
+    # =========== SETUP AND INITIALIZE SUMMARY ============
+
     tf.summary.scalar('accurarcy', accuracy)
 
-    #summary
     summary_op = tf.summary.merge_all()
 
 
