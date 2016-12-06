@@ -78,24 +78,32 @@ def main(argv=None):
 
     multi_weights = {
         'h1': init_weights('w1', [num_features, hidden_layer_size_1], 'uniform'),
-        'h2': init_weights('w2', [hidden_layer_size_1, hidden_layer_size_2], 'uniform'),
-        'out': init_weights('wOut', [hidden_layer_size_2, num_labels], 'uniform')
+        'h2': init_weights('w2', [hidden_layer_size_1, hidden_layer_size_2], 'uniform')
     }
     multi_biases = {
         'b1': init_weights('b1', [1, hidden_layer_size_1], 'zeros'),
-        'b2': init_weights('b2', [1, hidden_layer_size_2], 'zeros'),
-        'out': init_weights('bOut', [1, num_labels], 'zeros')
+        'b2': init_weights('b2', [1, hidden_layer_size_2], 'zeros')
     }
 
-    hidden_multi = multilayer_perceptron(x, multi_weights, multi_biases)
+    # Hidden layer with RELU activation
+    multi_layer_1 = tf.add(tf.matmul(x, multi_weights['h1']), multi_biases['b1'])
+    multi_layer_1 = tf.nn.relu(multi_layer_1)
+    # Hidden layer with RELU activation
+    multi_layer_2 = tf.add(tf.matmul(multi_layer_1, multi_weights['h2']), multi_biases['b2'])
+    multi_layer_2 = tf.nn.relu(multi_layer_2)
 
 
     # =========== MERGE MULTIPLE TRACKS ============
 
-    hidden_combined = tf.concat(0, [hidden_single, hidden_multi])
+    output_weights = init_weights('wOut', [hidden_layer_size_2 + hidden_layer_size_1, num_labels], 'uniform')
+    output_biases = init_weights('bOut', [1, num_labels], 'zeros')
+
+    hidden_combined = tf.concat(0, [hidden_single, multi_layer_2])
+
+    hidden_output = tf.matmul(hidden_combined, output_weights) + output_biases
 
     # The output layer.
-    y = tf.nn.softmax(hidden_combined);
+    y = tf.nn.softmax(hidden_output);
 
     # Optimization.
     cross_entropy = -tf.reduce_sum(y_*tf.log(y))
