@@ -46,7 +46,6 @@ def main(argv=None):
     # Matrix dimensions
     num_labels = len(labels_map)
     hidden_layer_size_1 = num_features
-    hidden_layer_size_2 = num_features
 
     print "data shape: " + str(num_features)
     print "train data rows: " + str(data_size)
@@ -65,45 +64,41 @@ def main(argv=None):
     # For the test data, hold the entire dataset in one constant node.
     data_node = tf.constant(data)
 
+    output_biases = init_weights('bOut', [1, num_labels], 'zeros')
 
     # =========== SINGLE HIDDEN LAYER TRACK ============
 
     single_weights = init_weights('single_weights', [num_features, num_labels], 'uniform')
-    single_biases = init_weights('single_biases', [1, num_labels], 'zeros')
 
-    hidden_single = tf.matmul(x, single_weights) + single_biases;
+    # NOTE: Not currently using relu after
+    hidden_single = tf.add(tf.matmul(x, single_weights), output_biases);
 
 
     # =========== MULTI LAYER TRACK ============
 
     multi_weights = {
-        'h1': init_weights('w1', [num_features, hidden_layer_size_1], 'uniform'),
-        'h2': init_weights('w2', [hidden_layer_size_1, hidden_layer_size_2], 'uniform')
+        'h1': init_weights('w1', [num_features, num_features], 'uniform'),
+        'h2': init_weights('w2', [num_features, num_labels], 'uniform')
     }
     multi_biases = {
-        'b1': init_weights('b1', [1, hidden_layer_size_1], 'zeros'),
-        'b2': init_weights('b2', [1, hidden_layer_size_2], 'zeros')
+        'b1': init_weights('b1', [1, hidden_single], 'zeros'),
+        'b2': output_biases
     }
 
-    # Hidden layer with RELU activation
+    # Hidden layer 1 with RELU activation
     multi_layer_1 = tf.add(tf.matmul(x, multi_weights['h1']), multi_biases['b1'])
     multi_layer_1 = tf.nn.relu(multi_layer_1)
-    # Hidden layer with RELU activation
+    # Hidden layer 2 with RELU activation
     multi_layer_2 = tf.add(tf.matmul(multi_layer_1, multi_weights['h2']), multi_biases['b2'])
     multi_layer_2 = tf.nn.relu(multi_layer_2)
 
 
     # =========== MERGE MULTIPLE TRACKS ============
 
-    output_weights = init_weights('wOut', [hidden_layer_size_2 + hidden_layer_size_1, num_labels], 'uniform')
-    output_biases = init_weights('bOut', [1, num_labels], 'zeros')
-
-    hidden_combined = tf.concat(0, [hidden_single, multi_layer_2])
-
-    hidden_output = tf.matmul(hidden_combined, output_weights) + output_biases
+    hidden_combined = tf.add(hidden_single, multi_layer_2)
 
     # The output layer.
-    y = tf.nn.softmax(hidden_output);
+    y = tf.nn.softmax(hidden_combined);
 
     # Optimization.
     cross_entropy = -tf.reduce_sum(y_*tf.log(y))
