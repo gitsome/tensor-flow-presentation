@@ -1,10 +1,9 @@
-import tensorflow.python.platform
-
 import numpy as np
+import random
+
+import tensorflow.python.platform
 import tensorflow as tf
 import matplotlib.pyplot as plt
-
-import random
 
 from humanIntuitionUtils import graphHelpers
 from humanIntuitionUtils import extract_data
@@ -31,10 +30,12 @@ FLAGS = tf.app.flags.FLAGS
 
 
 def main(argv=None):
-    # Be verbose?
-    verbose = FLAGS.verbose
 
-    # Get the data.
+    verbose = FLAGS.verbose
+    num_epochs = FLAGS.num_epochs
+
+    # =========== IMPORT DATA ============
+
     data_filename = FLAGS.data
 
     # Extract it into numpy arrays.
@@ -52,8 +53,8 @@ def main(argv=None):
     print "test data rows: " + str(testData_size)
     print "total labels: " + str(num_labels)
 
-    # Get the number of epochs for training.
-    num_epochs = FLAGS.num_epochs
+
+    # =========== INPUT AND FINAL OUTPUT ============
 
     # This is where training samples and labels are fed to the graph.
     # These placeholder nodes will be fed a batch of training data at each
@@ -64,7 +65,9 @@ def main(argv=None):
     # For the test data, hold the entire dataset in one constant node.
     data_node = tf.constant(data)
 
+    # The output biases are used for both tracks
     output_biases = init_weights('bOut', [1, num_labels], 'zeros')
+
 
     # =========== SINGLE HIDDEN LAYER TRACK ============
 
@@ -88,6 +91,7 @@ def main(argv=None):
     # Hidden layer 1 with RELU activation
     multi_layer_1 = tf.add(tf.matmul(x, multi_weights['h1']), multi_biases['b1'])
     multi_layer_1 = tf.nn.relu(multi_layer_1)
+
     # Hidden layer 2 with RELU activation
     multi_layer_2 = tf.add(tf.matmul(multi_layer_1, multi_weights['h2']), multi_biases['b2'])
     multi_layer_2 = tf.nn.relu(multi_layer_2)
@@ -112,6 +116,9 @@ def main(argv=None):
 
     #summary
     summary_op = tf.summary.merge_all()
+
+
+    # =========== RUN THE SESSION ============
 
     # Create a local session to run this computation.
     with tf.Session() as sess:
