@@ -1,80 +1,33 @@
 import tensorflow.python.platform
 
-import json
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
+
+import random
+
+from humanIntuitionUtils import graphHelpers
+from humanIntuitionUtils import extract_data
+from humanIntuitionUtils import variable_summaries
+from humanIntuitionUtils import init_weights
+from humanIntuitionUtils import multilayer_perceptron
 
 # Original from https://github.com/jasonbaldridge/try-tf/
 
+# set seed if required
+random.seed(15)
+tf.set_random_seed(15)
+
 # Global variables.
-BATCH_SIZE = 1  # The number of training examples to use per training step.
-PERCENT_TRAINING = 0.5;
-LEARNING_RATE = 0.02;
+BATCH_SIZE = 1  # The number of training examples to use per training step. We use 1 to simulate an individual updating their personal neural networks one example at a time
+PERCENT_TESTING = 0.5;
 
 # Define the flags useable from the command line.
 tf.app.flags.DEFINE_string('data','./server/exports/mlData.json', 'File containing the data, labels, features.')
 tf.app.flags.DEFINE_integer('num_epochs', 1, 'Number of examples to separate from the training data for the validation set.')
 tf.app.flags.DEFINE_boolean('verbose', False, 'Produce verbose output.')
+
 FLAGS = tf.app.flags.FLAGS
-
-# Extract numpy representations of the labels and features given rows consisting of:
-def extract_data(filename):
-
-    # Arrays to hold the labels and inputVectors.
-    trainLabels = []
-    trainVecs = []
-
-    testLabels = []
-    testVecs = []
-
-    with open(filename) as data_file:
-        fileData = json.load(data_file)
-
-    labels_map = fileData["labelMap"]
-
-    totalRows = len(fileData["data"])
-    maxTrainingIndex = int(round(totalRows * PERCENT_TRAINING, 0))
-
-    for fileDataEntryIndex in range(0, maxTrainingIndex):
-        fileDataEntry = fileData["data"][fileDataEntryIndex]
-        trainLabels.append(int(fileDataEntry["label"]))
-        trainVecs.append([float(x) for x in fileDataEntry["oneHotValue"]])
-
-    for fileDataEntryIndex in range(maxTrainingIndex, totalRows):
-        fileDataEntry = fileData["data"][fileDataEntryIndex]
-        testLabels.append(int(fileDataEntry["label"]))
-        testVecs.append([float(x) for x in fileDataEntry["oneHotValue"]])
-
-
-    # Convert the array of float arrays into a numpy float matrix.
-    trainVecs_np = np.matrix(trainVecs).astype(np.float32)
-    # Convert the array of int labels into a numpy array.
-    trainLabels_np = np.array(trainLabels).astype(dtype=np.uint8)
-    # Convert the int numpy array into a one-hot matrix.
-    trainLabels_onehot = (np.arange(len(labels_map)) == trainLabels_np[:, None]).astype(np.float32)
-
-    # Convert the array of float arrays into a numpy float matrix.
-    testVecs_np = np.matrix(testVecs).astype(np.float32)
-    # Convert the array of int labels into a numpy array.
-    testLabels_np = np.array(testLabels).astype(dtype=np.uint8)
-    # Convert the int numpy array into a one-hot matrix.
-    testLabels_onehot = (np.arange(len(labels_map)) == testLabels_np[:, None]).astype(np.float32)
-
-    # Return a pair of the feature matrix and the one-hot label matrix.
-    return trainVecs_np, trainLabels_onehot, testVecs_np, testLabels_onehot, labels_map
-
-
-# Init weights method. (Lifted from Delip Rao: http://deliprao.com/archives/100)
-def init_weights(namespace, shape, init_method='xavier', xavier_params = (None, None)):
-    if init_method == 'zeros':
-        return tf.Variable(tf.zeros(shape, dtype=tf.float32), name=namespace + '_hidden_W')
-    elif init_method == 'uniform':
-        return tf.Variable(tf.random_normal(shape, stddev=0.01, dtype=tf.float32), name=namespace + '_hidden_W')
-    else: #xavier
-        (fan_in, fan_out) = xavier_params
-        low = -4*np.sqrt(6.0/(fan_in + fan_out)) # {sigmoid:4, tanh:1}
-        high = 4*np.sqrt(6.0/(fan_in + fan_out))
-        return tf.Variable(tf.random_uniform(shape, minval=low, maxval=high, dtype=tf.float32), name=namespace + '_hidden_W')
 
 
 def main(argv=None):
@@ -85,9 +38,8 @@ def main(argv=None):
     data_filename = FLAGS.data
 
     # Extract it into numpy arrays.
-    data, labels, testData, testLabels, labels_map = extract_data(data_filename)
+    data, labels, testData, testLabels, labels_map = extract_data(data_filename, PERCENT_TESTING)
 
-    # Get the shape of the training data.
     data_size, num_features = data.shape
     testData_size, num_testData_features = testData.shape
 
@@ -116,24 +68,18 @@ def main(argv=None):
 
     # Define and initialize the network.
 
-    # tf Graph input
-    x = tf.placeholder("float", [None, num_features])
-    y = tf.placeholder("float", [None, num_labels])
+
+    # =========== SINGLE HIDDEN LAYER TRACK ============
+
+    w_hidden = init_weights('w_hidden', [num_features, num_labels], 'uniform')
+    b_hidden = init_weights('b_hidden', [1, num_labels], 'zeros')
+
+    # The hidden layer.
+    hidden_single = tf.matmul(x,w_hidden) + b_hidden;
 
 
-    # Create model
-    def multilayer_perceptron(x, weights, biases):
-        # Hidden layer with RELU activation
-        layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
-        layer_1 = tf.nn.relu(layer_1)
-        # Hidden layer with RELU activation
-        layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
-        layer_2 = tf.nn.relu(layer_2)
-        # Output layer with linear activation
-        out_layer = tf.matmul(layer_2, weights['out']) + biases['out']
-        return out_layer
+    # =========== MULTI LAYER TRACK ============
 
-    # Store layers weight & bias
     weights = {
         'h1': init_weights('w1', [num_features, hidden_layer_size_1], 'uniform'),
         'h2': init_weights('w2', [hidden_layer_size_1, hidden_layer_size_2], 'uniform'),
@@ -145,20 +91,33 @@ def main(argv=None):
         'out': init_weights('bOut', [1, num_labels], 'zeros')
     }
 
-    # Construct model
-    pred = multilayer_perceptron(x, weights, biases)
+    hidden_multi = multilayer_perceptron(x, weights, biases)
 
-    # Define loss and optimizer
-    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
-    optimizer = tf.train.AdamOptimizer(learning_rate=LEARNING_RATE).minimize(cost)
+
+    hidden_combined = tf.concat(0, [hidden_single, hidden_multi])
+
+
+    # The output layer.
+    y = tf.nn.softmax(hidden_combined);
+
+    # Optimization.
+    cross_entropy = -tf.reduce_sum(y_*tf.log(y))
+    train_step = tf.train.GradientDescentOptimizer(0.03).minimize(cross_entropy)
+
+    # Evaluation.
+    correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+
+    tf.summary.scalar('accurarcy', accuracy)
 
     #summary
-    summary_op = tf.merge_all_summaries()
+    summary_op = tf.summary.merge_all()
 
     # Create a local session to run this computation.
     with tf.Session() as sess:
+
         # Run all the initializers to prepare the trainable parameters.
-        tf.initialize_all_variables().run()
+        tf.global_variables_initializer().run()
 
         writer = tf.train.SummaryWriter('./logs', sess.graph)
 
@@ -171,14 +130,30 @@ def main(argv=None):
             batch_data = data[offset:(offset + BATCH_SIZE), :]
             batch_labels = labels[offset:(offset + BATCH_SIZE)]
 
-            sess.run([optimizer, cost], feed_dict={x: batch_data, y: batch_labels})
+            _  = sess.run([train_step], feed_dict={x: batch_data, y_: batch_labels})
+            summary = sess.run(summary_op, feed_dict={x: testData, y_: testLabels})
+            writer.add_summary(summary, step)
 
-        # Test model
-        correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
-        # Calculate accuracy
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-        print "Accuracy:", accuracy.eval({x: testData, y: testLabels})
 
+        fig, plots = plt.subplots(2)
+
+        plt.setp(plots, xticks=graphHelpers['xTicks'], xticklabels=graphHelpers['xLabels'], yticks=graphHelpers['yTicks'], yticklabels=graphHelpers['yLabels'])
+
+        plots[0].set_title("Schema A")
+        plots[1].set_title("Schema B")
+
+        plt.subplots_adjust(hspace=0.5)
+
+        for i in range(2):
+            # NOTE [:,i] is all rows in column i
+            # This would be getting all weights from hidden layer to the ith label
+            plots[i].invert_yaxis()
+            plots[i].pcolor(sess.run(w_hidden)[:,i].reshape(7,26))
+
+        fig.savefig('weights.png')
+
+        print "Train Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels})
+        print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels})
 
 if __name__ == '__main__':
     tf.app.run()

@@ -73,6 +73,19 @@ def variable_summaries(var, name):
         tf.summary.histogram('histogram', var)
 
 
+# Create model
+def multilayer_perceptron(x, weights, biases):
+    # Hidden layer with RELU activation
+    layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
+    layer_1 = tf.nn.relu(layer_1)
+    # Hidden layer with RELU activation
+    layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
+    layer_2 = tf.nn.relu(layer_2)
+    # Output layer with linear activation
+    out_layer = tf.matmul(layer_2, weights['out']) + biases['out']
+    return out_layer
+
+
 # Init weights method. (Lifted from Delip Rao: http://deliprao.com/archives/100)
 def init_weights(namespace, shape, init_method='xavier', xavier_params = (None, None)):
     if init_method == 'zeros':
