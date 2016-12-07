@@ -14,12 +14,13 @@ from humanIntuitionUtils import init_weights
 # Original from https://github.com/jasonbaldridge/try-tf/
 
 # set seed if required
-random.seed(15)
-tf.set_random_seed(15)
+# random.seed(15)
+# tf.set_random_seed(15)
 
 # Global variables.
 BATCH_SIZE = 1  # The number of training examples to use per training step. We use 1 to simulate an individual updating their personal neural networks one example at a time
 PERCENT_TESTING = 0.5;
+RUN_INTEGER = random.randint(0,9999999)
 
 # Define the flags useable from the command line.
 tf.app.flags.DEFINE_string('data','./server/exports/mlData.json', 'File containing the data, labels, features.')
@@ -92,7 +93,7 @@ def main(argv=None):
         # Run all the initializers to prepare the trainable parameters.
         tf.global_variables_initializer().run()
 
-        writer = tf.train.SummaryWriter('./logs', sess.graph)
+        writer = tf.train.SummaryWriter('./logs/' + str(RUN_INTEGER), sess.graph)
 
         # Iterate and train.
         for step in xrange(num_epochs * data_size // BATCH_SIZE):

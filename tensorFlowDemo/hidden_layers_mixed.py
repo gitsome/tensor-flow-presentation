@@ -14,12 +14,14 @@ from humanIntuitionUtils import multilayer_perceptron
 # Original from https://github.com/jasonbaldridge/try-tf/
 
 # SET SEEDS IF NEEDED FOR TESTING
-random.seed(15)
-tf.set_random_seed(15)
+# random.seed(15)
+# tf.set_random_seed(15)
 
 # GLOBAL VARIABLES
 BATCH_SIZE = 1  # The number of training examples to use per training step. We use 1 to simulate an individual updating their personal neural networks one example at a time
-PERCENT_TESTING = 0.5;
+PERCENT_TESTING = 0.5
+LEARNING_RATE = 0.2
+RUN_INTEGER = random.randint(0,9999999)
 
 # Define the flags useable from the command line.
 tf.app.flags.DEFINE_string('data','./server/exports/mlData.json', 'File containing the data, labels, features.')
@@ -46,7 +48,6 @@ def main(argv=None):
 
     # Matrix dimensions
     num_labels = len(labels_map)
-    hidden_layer_size_1 = num_features
 
     print "data shape: " + str(num_features)
     print "train data rows: " + str(data_size)
@@ -84,7 +85,7 @@ def main(argv=None):
         'h2': init_weights('w2', [num_features, num_labels], 'uniform')
     }
     multi_biases = {
-        'b1': init_weights('b1', [1, hidden_single], 'zeros'),
+        'b1': init_weights('b1', [1, num_features], 'zeros'),
         'b2': output_biases
     }
 
@@ -106,7 +107,7 @@ def main(argv=None):
 
     # Optimization.
     cross_entropy = -tf.reduce_sum(y_*tf.log(y))
-    train_step = tf.train.GradientDescentOptimizer(0.03).minimize(cross_entropy)
+    train_step = tf.train.GradientDescentOptimizer(LEARNING_RATE).minimize(cross_entropy)
 
     # Evaluation.
     correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
@@ -128,7 +129,7 @@ def main(argv=None):
         # Run all the initializers to prepare the trainable parameters.
         tf.global_variables_initializer().run()
 
-        writer = tf.train.SummaryWriter('./logs', sess.graph)
+        writer = tf.train.SummaryWriter('./logs/' + str(RUN_INTEGER), sess.graph)
 
         # Iterate and train.
         for step in xrange(num_epochs * data_size // BATCH_SIZE):
