@@ -134,24 +134,6 @@ def main(argv=None):
             summary = sess.run(summary_op, feed_dict={x: testData, y_: testLabels})
             writer.add_summary(summary, step)
 
-
-        fig, plots = plt.subplots(2)
-
-        plt.setp(plots, xticks=graphHelpers['xTicks'], xticklabels=graphHelpers['xLabels'], yticks=graphHelpers['yTicks'], yticklabels=graphHelpers['yLabels'])
-
-        plots[0].set_title("Schema A")
-        plots[1].set_title("Schema B")
-
-        plt.subplots_adjust(hspace=0.5)
-
-        for i in range(2):
-            # NOTE [:,i] is all rows in column i
-            # This would be getting all weights from hidden layer to the ith label
-            plots[i].invert_yaxis()
-            plots[i].pcolor(sess.run(w_hidden)[:,i].reshape(7,26))
-
-        fig.savefig('weights.png')
-
         print "Train Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels})
         print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels})
 
