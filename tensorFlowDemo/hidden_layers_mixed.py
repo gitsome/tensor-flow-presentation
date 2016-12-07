@@ -1,10 +1,9 @@
-import tensorflow.python.platform
-
 import numpy as np
+import random
+
+import tensorflow.python.platform
 import tensorflow as tf
 import matplotlib.pyplot as plt
-
-import random
 
 from humanIntuitionUtils import graphHelpers
 from humanIntuitionUtils import extract_data
@@ -14,11 +13,11 @@ from humanIntuitionUtils import multilayer_perceptron
 
 # Original from https://github.com/jasonbaldridge/try-tf/
 
-# set seed if required
+# SET SEEDS IF NEEDED FOR TESTING
 random.seed(15)
 tf.set_random_seed(15)
 
-# Global variables.
+# GLOBAL VARIABLES
 BATCH_SIZE = 1  # The number of training examples to use per training step. We use 1 to simulate an individual updating their personal neural networks one example at a time
 PERCENT_TESTING = 0.5;
 
@@ -31,10 +30,12 @@ FLAGS = tf.app.flags.FLAGS
 
 
 def main(argv=None):
-    # Be verbose?
-    verbose = FLAGS.verbose
 
-    # Get the data.
+    verbose = FLAGS.verbose
+    num_epochs = FLAGS.num_epochs
+
+    # =========== IMPORT DATA ============
+
     data_filename = FLAGS.data
 
     # Extract it into numpy arrays.
@@ -43,19 +44,17 @@ def main(argv=None):
     data_size, num_features = data.shape
     testData_size, num_testData_features = testData.shape
 
+    # Matrix dimensions
     num_labels = len(labels_map)
+    hidden_layer_size_1 = num_features
 
     print "data shape: " + str(num_features)
     print "train data rows: " + str(data_size)
     print "test data rows: " + str(testData_size)
     print "total labels: " + str(num_labels)
 
-    # Get the number of epochs for training.
-    num_epochs = FLAGS.num_epochs
 
-    # Get the size of layer one.
-    hidden_layer_size_1 = num_features
-    hidden_layer_size_2 = num_features
+    # =========== INPUT AND FINAL OUTPUT ============
 
     # This is where training samples and labels are fed to the graph.
     # These placeholder nodes will be fed a batch of training data at each
@@ -66,36 +65,41 @@ def main(argv=None):
     # For the test data, hold the entire dataset in one constant node.
     data_node = tf.constant(data)
 
-    # Define and initialize the network.
+    # The output biases are used for both tracks
+    output_biases = init_weights('bOut', [1, num_labels], 'zeros')
 
 
     # =========== SINGLE HIDDEN LAYER TRACK ============
 
-    w_hidden = init_weights('w_hidden', [num_features, num_labels], 'uniform')
-    b_hidden = init_weights('b_hidden', [1, num_labels], 'zeros')
+    single_weights = init_weights('single_weights', [num_features, num_labels], 'uniform')
 
-    # The hidden layer.
-    hidden_single = tf.matmul(x,w_hidden) + b_hidden;
+    # NOTE: Not currently using relu after
+    hidden_single = tf.add(tf.matmul(x, single_weights), output_biases);
 
 
     # =========== MULTI LAYER TRACK ============
 
-    weights = {
-        'h1': init_weights('w1', [num_features, hidden_layer_size_1], 'uniform'),
-        'h2': init_weights('w2', [hidden_layer_size_1, hidden_layer_size_2], 'uniform'),
-        'out': init_weights('wOut', [hidden_layer_size_2, num_labels], 'uniform')
+    multi_weights = {
+        'h1': init_weights('w1', [num_features, num_features], 'uniform'),
+        'h2': init_weights('w2', [num_features, num_labels], 'uniform')
     }
-    biases = {
-        'b1': init_weights('b1', [1, hidden_layer_size_1], 'zeros'),
-        'b2': init_weights('b2', [1, hidden_layer_size_2], 'zeros'),
-        'out': init_weights('bOut', [1, num_labels], 'zeros')
+    multi_biases = {
+        'b1': init_weights('b1', [1, hidden_single], 'zeros'),
+        'b2': output_biases
     }
 
-    hidden_multi = multilayer_perceptron(x, weights, biases)
+    # Hidden layer 1 with RELU activation
+    multi_layer_1 = tf.add(tf.matmul(x, multi_weights['h1']), multi_biases['b1'])
+    multi_layer_1 = tf.nn.relu(multi_layer_1)
+
+    # Hidden layer 2 with RELU activation
+    multi_layer_2 = tf.add(tf.matmul(multi_layer_1, multi_weights['h2']), multi_biases['b2'])
+    multi_layer_2 = tf.nn.relu(multi_layer_2)
 
 
-    hidden_combined = tf.concat(0, [hidden_single, hidden_multi])
+    # =========== MERGE MULTIPLE TRACKS ============
 
+    hidden_combined = tf.add(hidden_single, multi_layer_2)
 
     # The output layer.
     y = tf.nn.softmax(hidden_combined);
@@ -108,10 +112,15 @@ def main(argv=None):
     correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
 
+
+    # =========== SETUP AND INITIALIZE SUMMARY ============
+
     tf.summary.scalar('accurarcy', accuracy)
 
-    #summary
     summary_op = tf.summary.merge_all()
+
+
+    # =========== RUN THE SESSION ============
 
     # Create a local session to run this computation.
     with tf.Session() as sess:

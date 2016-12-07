@@ -9,6 +9,7 @@ from humanIntuitionUtils import graphHelpers
 from humanIntuitionUtils import extract_data
 from humanIntuitionUtils import variable_summaries
 from humanIntuitionUtils import init_weights
+from humanIntuitionUtils import multilayer_perceptron
 
 # Original from https://github.com/jasonbaldridge/try-tf/
 
@@ -70,19 +71,6 @@ def main(argv=None):
     # tf Graph input
     x = tf.placeholder("float", [None, num_features])
     y = tf.placeholder("float", [None, num_labels])
-
-
-    # Create model
-    def multilayer_perceptron(x, weights, biases):
-        # Hidden layer with RELU activation
-        layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
-        layer_1 = tf.nn.relu(layer_1)
-        # Hidden layer with RELU activation
-        layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
-        layer_2 = tf.nn.relu(layer_2)
-        # Output layer with linear activation
-        out_layer = tf.matmul(layer_2, weights['out']) + biases['out']
-        return out_layer
 
     # Store layers weight & bias
     weights = {
