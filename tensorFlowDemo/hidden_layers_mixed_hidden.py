@@ -47,7 +47,7 @@ def main(argv=None):
     testData_size, num_testData_features = testData.shape
 
     # Matrix dimensions
-    num_combined_hidden = num_features / 2
+    num_combined_hidden = num_features
     num_labels = len(labels_map)
 
     print "data shape: " + str(num_features)

@@ -124,26 +124,24 @@ def main(argv=None):
             writer.add_summary(summary, step)
 
 
-        fig, plots = plt.subplots(2)
+        fig, plots = plt.subplots(1)
 
         plt.setp(plots, xticks=graphHelpers['xTicks'], xticklabels=graphHelpers['xLabels'], yticks=graphHelpers['yTicks'], yticklabels=graphHelpers['yLabels'])
 
-        plots[0].set_title("Schema A")
-        plots[1].set_title("Schema B")
+        plots[0].set_title("Input Weights")
 
         plt.subplots_adjust(hspace=0.5)
 
-        for i in range(2):
-            # NOTE [:,i] is all rows in column i
-            # This would be getting all weights from hidden layer to the ith label
-            plots[i].invert_yaxis()
-            plots[i].pcolor(sess.run(weights['h1'])[:,i].reshape(7,26))
+        plots[i].invert_yaxis()
+        plots[i].pcolor(sess.run(weights['h1'])[:,i].reshape(7,26))
 
         fig.savefig('weights.png')
 
 
         print "Accuracy:", accuracy.eval({x: testData, y: testLabels})
 
+
+# =========== A WAY TO LAUNCH AND TAKE ADVANTAGE OF PYTHON TO SETUP A MAIN MEHTOD ============
 
 if __name__ == '__main__':
     tf.app.run()

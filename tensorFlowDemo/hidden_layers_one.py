@@ -129,5 +129,8 @@ def main(argv=None):
         print "Train Accuracy:", accuracy.eval(feed_dict={x: data, y_: labels})
         print "Test Accuracy:", accuracy.eval(feed_dict={x: testData, y_: testLabels})
 
+
+# =========== A WAY TO LAUNCH AND TAKE ADVANTAGE OF PYTHON TO SETUP A MAIN MEHTOD ============
+
 if __name__ == '__main__':
     tf.app.run()
